@@ -21,16 +21,28 @@
         return;
       }
     } else {
-      var html = [
-        '<div id="' + id + '" class="article-share-box">',
-          '<input class="article-share-input" value="' + url + '">',
-          '<div class="article-share-links">',
-            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-          '</div>',
-        '</div>'
+      // var html = [
+      //   '<div id="' + id + '" class="article-share-box">',
+      //     '<input class="article-share-input" value="' + url + '">',
+      //     '<div class="article-share-links">',
+      //       '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+      //       '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+      //       '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+      //       '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+      //     '</div>',
+      //   '</div>'
+      // ].join('');
+
+      var  html= [
+'<div class="jiathis_style_24x24">',
+  '<a class="jiathis_button_qzone"></a>',
+  '<a class="jiathis_button_tsina"></a>',
+  '<a class="jiathis_button_tqq"></a>',
+  '<a class="jiathis_button_weixin"></a>',
+  '<a class="jiathis_button_renren"></a>',
+        '<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>',
+  '<a class="jiathis_counter_style"></a>',
+'</div>'
       ].join('');
 
       var box = $(html);
