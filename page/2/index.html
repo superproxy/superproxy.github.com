@@ -104,11 +104,11 @@ var _hmt = _hmt || [];
       </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        20
+        21
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        37
+        40
         <span>标签</span>
       </div>
     </div>
@@ -138,6 +138,66 @@ var _hmt = _hmt || [];
 </aside>
       
       <section id="main">
+      <article id="post-BeanShell在网管开发中的应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2011/11/18/BeanShell在网管开发中的应用/">BeanShell在网管开发中的应用</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          <div class="article-date">
+  <i class="fa fa-calendar"></i>
+  <a href="/2011/11/18/BeanShell在网管开发中的应用/">
+    <time datetime="2011-11-18T02:19:00.000Z" itemprop="datePublished">2011-11-18</time>
+  </a>
+</div>
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="BeanShell">BeanShell</h3><p>本文主要介绍了在网管开发中，如何利用BeanShell方便网管开发、问题定位和测试的一些方法和技巧。本文最后介绍如何把BeanShell集成到网管中。</p>
+<div><br>  <object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="950" height="610" border="0" name="pdf"><br>           <param name="_Version" value="65539"><br>           <param name="_ExtentX" value="20108"><br>           <param name="_ExtentY" value="10866"><br>           <param name="_StockProps" value="0"><br>           <!-- PDF Folder --><br>           <param name="SRC" value="/docs/beanshell/BeanShell在网管开发中的应用.pdf"><br>       </object><br></div>
+
+<script language="javascript">
+ pdf.SetShowToolbar(false);
+</script> 
+
+      
+    </div>
+    <footer class="article-footer">
+  <div class="jiathis_style_24x24">
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_renren"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2011/11/18/BeanShell在网管开发中的应用/"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+
+
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/beanshell/">beanshell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线上分析/">线上分析</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线上调试/">线上调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
       <article id="post-工资和效率" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -327,85 +387,8 @@ var _hmt = _hmt || [];
 
 
     
-      <article id="post-可扩展_高性能的一般思路" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2011/09/26/可扩展_高性能的一般思路/">可扩展、高性能一般思路</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          <div class="article-date">
-  <i class="fa fa-calendar"></i>
-  <a href="/2011/09/26/可扩展_高性能的一般思路/">
-    <time datetime="2011-09-26T00:08:00.000Z" itemprop="datePublished">2011-09-26</time>
-  </a>
-</div>
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="硬件">硬件</h4><p>更快的CPU<br>更大的RAM<br>高速的网络<br>高吞吐量的I/O</p>
-<h4 id="负载均衡器">负载均衡器</h4><ol>
-<li><p>基于DNS的 集群<br>优点：防止单一的中央节点<br>需要域名服务器的支持</p>
-<p>镜像服务器技术 CDN<br>基于特定服务器软件的负载均衡<br>基于DNS的负载均衡`<br>基于四层交换技术的负载均衡<br>基于七层交换技术的负载均衡<br>站点镜像技术<br>站点镜像技术实际上利用了DNS负载均衡技术。</p>
-</li>
-<li><p>基于Nginx<br>优点：配置灵活<br>缺点需要中央节点</p>
-</li>
-<li><p>二级 Nginx<br>优点：可扩展行强<br>缺点：转发延时大</p>
-</li>
-</ol>
-<h4 id="应用服务器功能">应用服务器功能</h4><ol>
-<li><p>集群Session拷贝<br>优点：只是提供功能可用</p>
-</li>
-<li><p>根据地域或者IP划分服务器<br>优点：减少Session拷贝<br>缺点: 需要很多服务器</p>
-</li>
-<li><p>Session集中管理<br>优点：避免Session复制的开销（CPU和内存）</p>
-</li>
-<li><p>使用Cookie代替Session<br>多个应用使用单点登录<br>Cookie数据需要加密，QQ密码在本地就加密了</p>
-</li>
-</ol>
-<h4 id="数据库">数据库</h4><ol>
-<li>数据库 分表、分库、读写分离<br>可扩展系行差，系统变化比较大。系统变化频繁。<br>数据库水平、垂直分隔<br>2.缓存MemCache<br>考虑mediawiki, 10亿条数据。1000万个用户。每秒并发10W </li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-  <div class="jiathis_style_24x24">
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_renren"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2011/09/26/可扩展_高性能的一般思路/"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-
-
-
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/可扩展/">可扩展</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高性能/">高性能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -488,7 +471,7 @@ var _hmt = _hmt || [];
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2011/10/18/工资和效率/" class="thumbnail">
+              <a href="/2011/11/18/BeanShell在网管开发中的应用/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -497,8 +480,8 @@ var _hmt = _hmt || [];
             
             <div class="item-inner">
               <p class="item-category"></p>
-              <p class="item-title"><a href="/2011/10/18/工资和效率/" class="title">分析为什么程序员的工作效率跟工资不成比例</a></p>
-              <p class="item-date"><time datetime="2011-10-18T04:31:00.000Z" itemprop="datePublished">2011-10-18</time></p>
+              <p class="item-title"><a href="/2011/11/18/BeanShell在网管开发中的应用/" class="title">BeanShell在网管开发中的应用</a></p>
+              <p class="item-date"><time datetime="2011-11-18T02:19:00.000Z" itemprop="datePublished">2011-11-18</time></p>
             </div>
           </li>
         
@@ -523,7 +506,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web优化/">Web优化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web开发演化/">Web开发演化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/confluence/">confluence</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/">debug</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/editor/">editor</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/equinox/">equinox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/felix/">felix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hello-world/">hello world</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/history/">history</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javap/">javap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jira/">jira</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load-balancer/">load balancer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvs/">lvs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mycloud/">mycloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ollydbg/">ollydbg</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/osgi/">osgi</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/">proxy</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse-proxy/">reverse proxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wiki/">wiki</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/互联网/">互联网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/产品/">产品</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单机/">单机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/可扩展/">可扩展</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多实例/">多实例</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工资/">工资</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件开发/">软件开发</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高性能/">高性能</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web优化/">Web优化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web开发演化/">Web开发演化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/beanshell/">beanshell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/confluence/">confluence</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/">debug</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/editor/">editor</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/equinox/">equinox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/felix/">felix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hello-world/">hello world</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/history/">history</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ide/">ide</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javap/">javap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jira/">jira</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load-balancer/">load balancer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvs/">lvs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mycloud/">mycloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ollydbg/">ollydbg</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/osgi/">osgi</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/">proxy</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse-proxy/">reverse proxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wiki/">wiki</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/互联网/">互联网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/产品/">产品</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单机/">单机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/可扩展/">可扩展</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多实例/">多实例</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工资/">工资</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线上分析/">线上分析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线上调试/">线上调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件开发/">软件开发</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高性能/">高性能</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -532,7 +515,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Web优化/" style="font-size: 10px;">Web优化</a> <a href="/tags/Web开发演化/" style="font-size: 10px;">Web开发演化</a> <a href="/tags/confluence/" style="font-size: 10px;">confluence</a> <a href="/tags/debug/" style="font-size: 20px;">debug</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/editor/" style="font-size: 10px;">editor</a> <a href="/tags/equinox/" style="font-size: 10px;">equinox</a> <a href="/tags/felix/" style="font-size: 10px;">felix</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hello-world/" style="font-size: 10px;">hello world</a> <a href="/tags/history/" style="font-size: 10px;">history</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/javap/" style="font-size: 10px;">javap</a> <a href="/tags/jira/" style="font-size: 10px;">jira</a> <a href="/tags/load-balancer/" style="font-size: 10px;">load balancer</a> <a href="/tags/lvs/" style="font-size: 10px;">lvs</a> <a href="/tags/mycloud/" style="font-size: 10px;">mycloud</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/ollydbg/" style="font-size: 10px;">ollydbg</a> <a href="/tags/osgi/" style="font-size: 10px;">osgi</a> <a href="/tags/proxy/" style="font-size: 20px;">proxy</a> <a href="/tags/reverse-proxy/" style="font-size: 10px;">reverse proxy</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/wiki/" style="font-size: 10px;">wiki</a> <a href="/tags/互联网/" style="font-size: 10px;">互联网</a> <a href="/tags/产品/" style="font-size: 10px;">产品</a> <a href="/tags/单机/" style="font-size: 10px;">单机</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/可扩展/" style="font-size: 10px;">可扩展</a> <a href="/tags/多实例/" style="font-size: 10px;">多实例</a> <a href="/tags/工资/" style="font-size: 10px;">工资</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件开发/" style="font-size: 20px;">软件开发</a> <a href="/tags/高性能/" style="font-size: 10px;">高性能</a>
+      <a href="/tags/Web优化/" style="font-size: 10px;">Web优化</a> <a href="/tags/Web开发演化/" style="font-size: 10px;">Web开发演化</a> <a href="/tags/beanshell/" style="font-size: 10px;">beanshell</a> <a href="/tags/confluence/" style="font-size: 10px;">confluence</a> <a href="/tags/debug/" style="font-size: 20px;">debug</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/editor/" style="font-size: 10px;">editor</a> <a href="/tags/equinox/" style="font-size: 10px;">equinox</a> <a href="/tags/felix/" style="font-size: 10px;">felix</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hello-world/" style="font-size: 10px;">hello world</a> <a href="/tags/history/" style="font-size: 10px;">history</a> <a href="/tags/ide/" style="font-size: 10px;">ide</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javap/" style="font-size: 10px;">javap</a> <a href="/tags/jira/" style="font-size: 10px;">jira</a> <a href="/tags/load-balancer/" style="font-size: 10px;">load balancer</a> <a href="/tags/lvs/" style="font-size: 10px;">lvs</a> <a href="/tags/mycloud/" style="font-size: 10px;">mycloud</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/ollydbg/" style="font-size: 10px;">ollydbg</a> <a href="/tags/osgi/" style="font-size: 10px;">osgi</a> <a href="/tags/proxy/" style="font-size: 20px;">proxy</a> <a href="/tags/reverse-proxy/" style="font-size: 10px;">reverse proxy</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/wiki/" style="font-size: 10px;">wiki</a> <a href="/tags/互联网/" style="font-size: 10px;">互联网</a> <a href="/tags/产品/" style="font-size: 10px;">产品</a> <a href="/tags/单机/" style="font-size: 10px;">单机</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/可扩展/" style="font-size: 10px;">可扩展</a> <a href="/tags/多实例/" style="font-size: 10px;">多实例</a> <a href="/tags/工资/" style="font-size: 10px;">工资</a> <a href="/tags/线上分析/" style="font-size: 10px;">线上分析</a> <a href="/tags/线上调试/" style="font-size: 10px;">线上调试</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件开发/" style="font-size: 20px;">软件开发</a> <a href="/tags/高性能/" style="font-size: 10px;">高性能</a>
     </div>
   </div>
 
@@ -541,7 +524,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/09/">九月 2011</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/03/">三月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11/">十一月 2010</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/09/">九月 2010</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/12/">十二月 2009</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2000/07/">七月 2000</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/09/">九月 2011</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/03/">三月 2011</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11/">十一月 2010</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/09/">九月 2010</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/12/">十二月 2009</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2000/07/">七月 2000</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
