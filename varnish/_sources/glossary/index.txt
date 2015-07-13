@@ -1,0 +1,87 @@
+
+.. _glossary:
+
+Varnish中的名词解释
+================
+
+.. glossary:: 
+   :sorted:
+
+   ..
+    这篇文章会在格式处理过程中自动排序，所以我们会保持源码顺序确保覆盖所有的基本点。
+
+
+   .. comment: "components of varnish --------------------------------"
+
+   varnishd (NB: with 'd')
+	Varnish 缓存的实际程序，虽然是一个程序，但是运行起来后，你就会看到 *两个* 进程:  "master" 和 the "worker" (或 "child").
+
+   master (process)
+    Varnish程序中的两个进程之一。主进程是用来管理配置、参数、VCL 等的一个进程。master程序绝不会处理实际的HTTP流量。
+
+   worker (process)
+    worker进程的启动和配置是靠master进程完成的。实际上worker进程处理所有你要varnish处理的操作。如果worker进程小时，主进程会尝试再次启动worker进程，以确保网站可用。
+
+   backend
+    backend是Varnish作为HTTP服务端用来做缓存的源。backend可以是任何种类处理HTTP请求的设备，包括但是不仅仅限于：web服务器，CMS系统，负载均衡，其他varnish等。
+
+   client
+    客户端是给varnish发送HTTP请求的程序，比较典型的如：浏览器，但是别忘了蜘蛛、机器人、脚本等
+
+   varnishstat
+    varnishstat程序用来输出varnish统计相关计数。
+
+   varnishlog
+    varnishlog程序以原始格式输出varnish事务日志。
+
+   varnishtop
+    varnishtop程序给出事务日志的 "top-X"列表视图。
+
+   varnishncsa
+    varnishncsa程序以 "NCSA" 格式输出varnish日志。
+
+   varnishhist
+    以1980ies ASCII艺术风格展示响应时间处理的直方图。
+
+   varnishtest
+    varnishtest程序通过测试脚本，模拟后端和客户端测试varnishd程序的处理。
+
+   .. comment: "components of traffic ---------------------------------"
+
+   header
+    HTTP协议头，比如"Accept-Encoding:"。
+
+   request
+    request是客户端发给varnishd或varnishd发送给后端（的数据流）。
+
+   response
+    response是后端返回给varnish，然后varnish返回给客户端（的数据流），当response作为cache处在varnishd中时，我们可以称为object。
+
+   backend response
+    该请求是指后端到varnishd服务器的请求。在vcl_backend_response中可以操作处理后端的请求。
+
+   body
+    body是组成object的字节，varnishd程序不在于这些字节是HTML/XML/JPEG或EBCDIC等格式，对varnish来说这些格式的内容就是字节而已。
+
+   object
+    Varnishd程序从后端接收请求，然后产生一个object，varnish把缓存的object返回给客户端。如果object是一个可以pass的请求结果，就不会缓存在varnishd中。
+
+   .. comment: "configuration of varnishd -----------------------------"
+
+   VCL
+	Varnish Configuration Language（Varnish配置语言）, 专门用来指示varnishd如何行为的语言。
+
+   .. comment: "actions in VCL ----------------------------------------"
+
+   hit
+    Varnish从缓存中返回的object。
+
+   miss
+    在返回客户端前，varnish从后端取回的object根据实际情况可能（不）会存放在cache中。
+
+   pass
+    Varnish不会缓存object，仅简单的是从后端取回然后发送给客户端。
+
+   pipe
+    Varnish只在client和backend之间传输字节，varnish不会分析这些自己的具体意义。
+

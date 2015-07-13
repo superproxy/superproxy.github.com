@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Varnish 管理员文档 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="#" />
+    <link rel="next" title="Varnish安装" href="installation/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="installation/index.html" title="Varnish安装"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">varnish 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnish">
+<h1>Varnish 管理员文档<a class="headerlink" href="#varnish" title="Permalink to this headline">¶</a></h1>
+<p>VarnishCache是一款web应用加速器软件，其作为反向代理缓存而被人所熟悉。Varnish应该可以安装任何Server前端，通过对HTTP协议的说明和和对其配置来缓存内容。VarnishCache非常非常快速，通常它可以加速一个元素到300-1000倍，而这取决于你目前的架构。</p>
+<p>使用Varnish前我们建议你先读一读Varnish文档教程 <a class="reference internal" href="installation/index.html#install-index"><em>Varnish安装</em></a> .一旦你运行了Varnish，我们提醒你看看我们的教程- <em class="xref std std-ref">tutorial-index</em>,最后是 <a class="reference internal" href="users-guide/index.html#users-guide-index"><em>The Varnish Users Guide</em></a>.</p>
+<p>如果想要了解如何使用Varnish特定工具, <a class="reference internal" href="reference/index.html#reference-index"><em>The Varnish Reference Manual</em></a> 包含了关于这些工具的详细文档。对比Varnish上一版版本的更改点见 <a class="reference internal" href="whats-new/index.html#whats-new-index"><em>What&#8217;s new in Varnish 4.0</em></a> 章节. 后，我们有关于Varnish和HTTP的相关内容，请见 <a class="reference internal" href="phk/index.html#phk"><em>Poul-Hennings random outb.txts</em></a> 博客。</p>
+<p>手册中使用的 格式 约定包括：</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">service</span> <span class="pre">varnish</span> <span class="pre">restart</span></tt></dt>
+<dd>可以运行的命令或可使用的快捷键。或者使用终端或者在命令执行后</dd>
+<dt><cite>/usr/local/</cite>, <cite>varnishadm</cite>, <cite>sess_timeout</cite></dt>
+<dd>Varnish可以配置的路径和参数</dd>
+<dt><a class="reference external" href="http://www.varnish-cache.org/">http://www.varnish-cache.org/</a></dt>
+<dd>超连接</dd>
+</dl>
+</div></blockquote>
+<p>较长的命令列表示例和VCL格式如下：:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ /opt/varnish/sbin/varnishd -V
+varnishd (varnish-4.0.0-tp1 revision ddd00e1)
+Copyright (c) 2006 Verdens Gang AS
+Copyright (c) 2006-2011 Varnish Software AS
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation/index.html">Varnish安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Varnish教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-guide/index.html">The Varnish Users Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">The Varnish Reference Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whats-new/index.html">What&#8217;s new in Varnish 4.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phk/index.html">Poul-Hennings random outb.txts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary/index.html">Varnish中的名词解释</a></li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>索引和列表<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Varnish 管理员文档</a><ul>
+<li><a class="reference internal" href="#id1">索引和列表</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation/index.html"
+                        title="next chapter">Varnish安装</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="installation/index.html" title="Varnish安装"
+             >next</a> |</li>
+        <li><a href="#">varnish 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

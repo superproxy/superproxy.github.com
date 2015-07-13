@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>&lt;no title&gt; &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Starting and running Varnish" href="running.html" />
+    <link rel="next" title="CLI - bossing Varnish around" href="run_cli.html" />
+    <link rel="prev" title="Security first" href="run_security.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="run_cli.html" title="CLI - bossing Varnish around"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="run_security.html" title="Security first"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" accesskey="U">Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <p>Important command line arguments
+重要命令行参数
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+<p>There a two command line arguments you have to set when starting Varnish, these are:
+启动Varnish时，你需要设置两个重要的命令行参数，它们是：
+* what TCP port to serve HTTP from, and
+* 提供HTTP服务的TCP端口，以及
+* where the backend server can be contacted.
+* 可连接上的后端服务器</p>
+<p>If you have installed Varnish through using a provided operating system bound package
+假如你用每个操作系统相应的安装包安装Varnish，
+you will find the startup options here:
+你可以找到启动参数：</p>
+<ul class="simple">
+<li>Debian, Ubuntu: <cite>/etc/default/varnish</cite></li>
+<li>Red Hat, Centos: <cite>/etc/sysconfig/varnish</cite></li>
+<li>FreeBSD: <cite>/etc/rc.conf</cite> (See also: /usr/local/etc/rc.d/varnishd)</li>
+</ul>
+<p>&#8216;-a&#8217; <em>listen_address</em>
+&#8216;-a&#8217; <em>监听地址</em>
+^^^^^^^^^^^^^^^^^^^^^</p>
+<p>The &#8216;-a&#8217; argument defines what address Varnish should listen to, and service HTTP requests from.
+参数&#8217;-a&#8217;指定监听地址，Varnish以此地址提供HTTP服务。</p>
+<p>You will most likely want to set this to &#8221;:80&#8221; which is the Well
+通常你倾向于把其设置为&#8221;:80&#8221;，80是大家熟知的HTTP服务端口。
+Known Port for HTTP.</p>
+<p>You can specify multiple addresses separated by a comma, and you
+你可以通过冒号分隔的方式以指定多个地址，
+can use numeric or host/service names if you like, Varnish will try
+且可根据个人偏好使用数字或者主机/服务名，Varnish将
+to open and service as many of them as possible, but if none of them
+尽可能地开启这些地址以提供服务，
+can be opened, <cite>varnishd</cite> will not start.
+但若没有任何地址被开启，’varnishd&#8217;不会启动。</p>
+<p>Here are some examples::
+如下为参数&#8217;-a‘的一些示例：</p>
+<blockquote>
+<div>-a :80
+-a localhost:80
+-a 192.168.1.100:8080
+-a &#8216;[fe80::1]:80&#8217;
+-a &#8216;0.0.0.0:8080,[::]:8081&#8217;</div></blockquote>
+<p>If your webserver runs on the same machine, you will have to move
+若你的网页服务器也运行在该机器上，你首先应该
+it to another port number first.
+修改它的端口号。</p>
+<p>&#8216;-f&#8217; <em>VCL-file</em> or &#8216;-b&#8217; <em>backend</em>
+&#8216;-f&#8217; <em>VCL文件</em> 或者 &#8216;-b&#8217; <em>后端</em>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</p>
+<p>Varnish needs to know where to find the HTTP server it is caching for.
+Varnish需要知道其要缓存的HTTP服务器地址，
+You can either specify it with the &#8216;-b&#8217; argument, or you can put it in your own VCL file, specified with the &#8216;-f&#8217; argument.
+你可以通过参数&#8217;-b&#8217;指定，或者通过参数&#8217;-f&#8217;对应的VCL文件。</p>
+<p>Using &#8216;-b&#8217; is a quick way to get started::
+使用参数&#8217;-b&#8217;是一种比较快捷的方式，例如：</p>
+<blockquote>
+<div>-b localhost:81
+-b thatotherserver.example.com:80
+-b 192.168.1.2:80</div></blockquote>
+<p>Notice that if you specify a name, it can at most resolve to one IPv4
+需要注意的是，如果你指定的是一个名字，它会尽可能地被解析为一个IPv4地址
+<em>and</em> one IPv6 address.
+和一个IPv6地址。</p>
+<p>If you go with &#8216;-f&#8217;, you can start with a VCL file containing just::
+假如你使用参数&#8217;-f&#8217;，则对应的VCL配置文件的起始内容可设置为：</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>backend default {</dt>
+<dd>.host = &#8220;localhost:81&#8221;;</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>which is exactly what &#8216;-b&#8217; does.
+其等同于使用参数&#8217;-b&#8217;。</p>
+<p>In both cases the built-in VCL code is appended.
+在这种情况下，内置的VCL代码生效。</p>
+<p>Other options
+其它选项
+^^^^^^^^^^^^^</p>
+<p>Varnish comes with an abundance of useful command line arguments. We recommend that you study them but not necessary use them all, but to get started, the above will be sufficient.
+Varnish有丰富的命令参数。我们推荐你研究下这些参数，但没有必要全部使用它们，如果要启动Varnish，上面的介绍已经足够。</p>
+<p>By default Varnish will use 100 megabytes of malloc(3) storage
+默认情况下，Varnish会通过函数malloc分配100M的内存空间
+for caching objects, if you want to cache more than that, you
+以缓存对象，如果你需要更大的缓存空间，你
+should look at the &#8216;-s&#8217; argument.
+应该看下参数&#8217;-s&#8217;。</p>
+<p>If you run a really big site, you may want to tune the number of
+假如你在运行着一个大网站，你可能想通过选项&#8217;-p&#8217;调整
+worker threads and other parameters with the &#8216;-p&#8217; argument,
+工作线程数或其它的参数，
+but we generally advice not to do that unless you need to.
+但通常我们建议你在需要的时候才使用它。</p>
+<p>Before you go into production, you may also want to revisit the
+在你使用这个产品前，你可能想重访问
+chapter
+一些章节
+<a class="reference internal" href="run_security.html#run-security"><em>Security first</em></a> to see if you need to partition administrative
+<a class="reference internal" href="run_security.html#run-security"><em>Security first</em></a> 查看你是否需要区分管理员权限。
+privileges.</p>
+<p>For a complete list of the command line parameters please see
+命令行参数的完整列表，请查阅：
+<a class="reference internal" href="../reference/varnishd.html#ref-varnishd-options"><em>OPTIONS</em></a>.
+<a class="reference internal" href="../reference/varnishd.html#ref-varnishd-options"><em>OPTIONS</em></a>.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="run_security.html"
+                        title="previous chapter">Security first</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="run_cli.html"
+                        title="next chapter">CLI - bossing Varnish around</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/users-guide/command-line.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="run_cli.html" title="CLI - bossing Varnish around"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="run_security.html" title="Security first"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" >Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

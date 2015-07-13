@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>特性 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Varnish教程" href="index.html" />
+    <link rel="next" title="现在做什么？" href="now_what.html" />
+    <link rel="prev" title="后端服务器" href="backend_servers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="now_what.html" title="现在做什么？"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="backend_servers.html" title="后端服务器"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>特性<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>对比其他的程序，Varnish有几点不同之处. 其中一个你已经了解过了 - VCL. 在这一节中我们快速的浏览一下Varnish的其它特性以便知道如何最有效的利用Varnish.</p>
+<div class="section" id="id2">
+<h2>配置<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Varnish的配置是写在VCL中的. 当Varnish使用这个配置文件的时候，这个配置文件被转换成C代码并输入到一个C编译器中，然后加载和执行。</p>
+<p>所以，相对于其他软件的设置各种开关的开和关，Varnish的做法是编写各种策略来定义如何处理外部请求.</p>
+</div>
+<div class="section" id="varnishadm">
+<h2>varnishadm<a class="headerlink" href="#varnishadm" title="Permalink to this headline">¶</a></h2>
+<p>Varnish的管理控制台. 你可以通过
+<a href="#id3"><span class="problematic" id="id4">``</span></a>varnishadm``命令进入控制台. 为了能够正常的连接控制台，执行``varnishadm``命令的用户必须有权限读取`/etc/varnish/secret`用来验证用户身份。</p>
+<p>一但你连接了Varnish的控制台你可以对它做很多操作, 比如开启和关闭缓存进程,加载VCL,
+调整内置负载均衡和清除缓存内容。</p>
+<p>Varnish控制台有一个内置的命令&#8221;help&#8221; 可以给你一些提示在控制台中可以执行那些命令.</p>
+</div>
+<div class="section" id="varnishlog">
+<h2>varnishlog<a class="headerlink" href="#varnishlog" title="Permalink to this headline">¶</a></h2>
+<p>Varnish不会记录日志到磁盘，而是记录到一块内存中.实际上Varnish的日志是流日志. 你随时可以查看Varnish的日志流看看Varnish在执行些什么. Varnish日志会记录很多东西，你可以通过``varnishlog``命令查看日志流.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">特性</a><ul>
+<li><a class="reference internal" href="#id2">配置</a></li>
+<li><a class="reference internal" href="#varnishadm">varnishadm</a></li>
+<li><a class="reference internal" href="#varnishlog">varnishlog</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="backend_servers.html"
+                        title="previous chapter">后端服务器</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="now_what.html"
+                        title="next chapter">现在做什么？</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/peculiarities.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="now_what.html" title="现在做什么？"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="backend_servers.html" title="后端服务器"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

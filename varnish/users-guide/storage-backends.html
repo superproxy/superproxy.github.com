@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Storage backends &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Starting and running Varnish" href="running.html" />
+    <link rel="next" title="Parameters" href="params.html" />
+    <link rel="prev" title="CLI - bossing Varnish around" href="run_cli.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="params.html" title="Parameters"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="run_cli.html" title="CLI - bossing Varnish around"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" accesskey="U">Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="storage-backends">
+<span id="guide-storage"></span><h1>Storage backends<a class="headerlink" href="#storage-backends" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="intro">
+<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
+<p>Varnish has pluggable storage backends. It can store data in various
+backends which can have different performance characteristics. The default
+configuration is to use the malloc backend with a limited size. For a
+serious Varnish deployment you probably would want to adjust the storage
+settings.</p>
+</div>
+<div class="section" id="malloc">
+<h2>malloc<a class="headerlink" href="#malloc" title="Permalink to this headline">¶</a></h2>
+<p>syntax: malloc[,size]</p>
+<p>Malloc is a memory based backend. Each object will be allocated from
+memory. If your system runs low on memory swap will be used.</p>
+<p>Be aware that the size limitation only limits the actual storage and that the
+approximately 1k of memory per object, used for various internal
+structures, is included in the actual storage as well.</p>
+<p>The size parameter specifies the maximum amount of memory <cite>varnishd</cite>
+will allocate.  The size is assumed to be in bytes, unless followed by
+one of the following suffixes:</p>
+<blockquote>
+<div><p>K, k    The size is expressed in kibibytes.</p>
+<p>M, m    The size is expressed in mebibytes.</p>
+<p>G, g    The size is expressed in gibibytes.</p>
+<p>T, t    The size is expressed in tebibytes.</p>
+</div></blockquote>
+<p>The default size is unlimited.</p>
+<p>malloc&#8217;s performance is bound to memory speed so it is very fast. If
+the dataset is bigger than available memory performance will
+depend on the operating systems ability to page effectively.</p>
+</div>
+<div class="section" id="file">
+<h2>file<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h2>
+<p>syntax: file[,path[,size[,granularity]]]</p>
+<p>The file backend stores objects in memory backed by an unlinked file on disk
+with <cite>mmap</cite>.</p>
+<p>The &#8216;path&#8217; parameter specifies either the path to the backing file or
+the path to a directory in which <cite>varnishd</cite> will create the backing
+file. The default is <cite>/tmp</cite>.</p>
+<p>The size parameter specifies the size of the backing file. The size
+is assumed to be in bytes, unless followed by one of the following
+suffixes:</p>
+<blockquote>
+<div><p>K, k    The size is expressed in kibibytes.</p>
+<p>M, m    The size is expressed in mebibytes.</p>
+<p>G, g    The size is expressed in gibibytes.</p>
+<p>T, t    The size is expressed in tebibytes.</p>
+<dl class="docutils">
+<dt>%       The size is expressed as a percentage of the free space on the</dt>
+<dd>file system where it resides.</dd>
+</dl>
+</div></blockquote>
+<p>The default size is to use 50% of the space available on the device.</p>
+<p>If the backing file already exists, it will be truncated or expanded
+to the specified size.</p>
+<p>Note that if <cite>varnishd</cite> has to create or expand the file, it will not
+pre-allocate the added space, leading to fragmentation, which may
+adversely impact performance on rotating hard drives.  Pre-creating
+the storage file using <cite>dd(1)</cite> will reduce fragmentation to a minimum.</p>
+<p>The &#8216;granularity&#8217; parameter specifies the granularity of
+allocation. All allocations are rounded up to this size. The granularity is
+is assumed to be expressed in bytes, unless followed by one of the
+suffixes described for size except for %.</p>
+<p>The default granularity is the VM page size. The size should be reduced if you
+have many small objects.</p>
+<p>File performance is typically limited to the write speed of the
+device, and depending on use, the seek time.</p>
+</div>
+<div class="section" id="persistent-experimental">
+<h2>persistent (experimental)<a class="headerlink" href="#persistent-experimental" title="Permalink to this headline">¶</a></h2>
+<p>syntax: persistent,path,size {experimental}</p>
+<p>Persistent storage. Varnish will store objects in a file in a manner
+that will secure the survival of <em>most</em> of the objects in the event of
+a planned or unplanned shutdown of Varnish.</p>
+<p>The &#8216;path&#8217; parameter specifies the path to the backing file. If
+the file doesn&#8217;t exist Varnish will create it.</p>
+<p>The &#8216;size&#8217; parameter specifies the size of the backing file. The
+size is expressed in bytes, unless followed by one of the
+following suffixes:</p>
+<blockquote>
+<div><p>K, k    The size is expressed in kibibytes.</p>
+<p>M, m    The size is expressed in mebibytes.</p>
+<p>G, g    The size is expressed in gibibytes.</p>
+<p>T, t    The size is expressed in tebibytes.</p>
+</div></blockquote>
+<p>Varnish will split the file into logical <em>silos</em> and write to the
+silos in the manner of a circular buffer. Only one silo will be kept
+open at any given point in time. Full silos are <em>sealed</em>. When Varnish
+starts after a shutdown it will discard the content of any silo that
+isn&#8217;t sealed.</p>
+<p>Note that taking persistent silos offline and at the same time using
+bans can cause problems. This is due to the fact that bans added while the silo was
+offline will not be applied to the silo when it reenters the cache. Consequently enabling
+previously banned objects to reappear.</p>
+</div>
+</div>
+<div class="section" id="transient-storage">
+<h1>Transient Storage<a class="headerlink" href="#transient-storage" title="Permalink to this headline">¶</a></h1>
+<p>If you name any of your storage backend &#8220;Transient&#8221; it will be
+used for transient (short lived) objects. By default Varnish
+would use an unlimited malloc backend for this.</p>
+<p>Varnish will consider an object short lived if the TTL is below the
+parameter &#8216;shortlived&#8217;.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Storage backends</a><ul>
+<li><a class="reference internal" href="#intro">Intro</a></li>
+<li><a class="reference internal" href="#malloc">malloc</a></li>
+<li><a class="reference internal" href="#file">file</a></li>
+<li><a class="reference internal" href="#persistent-experimental">persistent (experimental)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transient-storage">Transient Storage</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="run_cli.html"
+                        title="previous chapter">CLI - bossing Varnish around</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="params.html"
+                        title="next chapter">Parameters</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/users-guide/storage-backends.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="params.html" title="Parameters"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="run_cli.html" title="CLI - bossing Varnish around"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" >Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

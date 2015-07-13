@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hashing &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="VCL - Varnish Configuration Language" href="vcl.html" />
+    <link rel="next" title="Misbehaving servers" href="vcl-grace.html" />
+    <link rel="prev" title="Backend servers" href="vcl-backends.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-grace.html" title="Misbehaving servers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-backends.html" title="Backend servers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="vcl.html" accesskey="U">VCL - Varnish Configuration Language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hashing">
+<h1>Hashing<a class="headerlink" href="#hashing" title="Permalink to this headline">¶</a></h1>
+<p>Internally, when Varnish stores content in the cache it stores the object
+together with a hash key to find the object again. In the default setup
+this key is calculated based on the content of the <em>Host</em> header or the
+IP address of the server and the URL.</p>
+<p>Behold the <cite>default vcl</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_hash {
+    hash_data(req.url);
+    if (req.http.host) {
+        hash_data(req.http.host);
+    } else {
+        hash_data(server.ip);
+    }
+    return (lookup);
+}
+</pre></div>
+</div>
+<p>As you can see it first checks in <cite>req.url</cite> then <cite>req.http.host</cite> if
+it exists. It is worth pointing out that Varnish doesn&#8217;t lowercase the
+hostname or the URL before hashing it so in theory having &#8220;Varnish.org/&#8221;
+and &#8220;varnish.org/&#8221; would result in different cache entries. Browsers
+however, tend to lowercase hostnames.</p>
+<p>You can change what goes into the hash. This way you can make Varnish
+serve up different content to different clients based on arbitrary
+criteria.</p>
+<p>Let&#8217;s say you want to serve pages in different languages to your users
+based on where their IP address is located. You would need some Vmod to
+get a country code and then put it into the hash. It might look like this.</p>
+<p>In <cite>vcl_recv</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre>set req.http.X-Country-Code = geoip.lookup(client.ip);
+</pre></div>
+</div>
+<p>And then add a <cite>vcl_hash</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_hash {
+    hash_data(req.http.X-Country-Code);
+}
+</pre></div>
+</div>
+<p>As the default VCL will take care of adding the host and URL to the hash
+we don&#8217;t have to do anything else. Be careful calling <tt class="docutils literal"><span class="pre">return</span> <span class="pre">(lookup)</span></tt>
+as this will abort the execution of the default VCL and Varnish can end
+up returning data based on more or less random inputs.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vcl-backends.html"
+                        title="previous chapter">Backend servers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vcl-grace.html"
+                        title="next chapter">Misbehaving servers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/users-guide/vcl-hashing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-grace.html" title="Misbehaving servers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-backends.html" title="Backend servers"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="vcl.html" >VCL - Varnish Configuration Language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

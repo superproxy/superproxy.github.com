@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>VCL &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="The Varnish Reference Manual" href="index.html" />
+    <link rel="next" title="Varnish CLI" href="varnish-cli.html" />
+    <link rel="prev" title="The Varnish Reference Manual" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="varnish-cli.html" title="Varnish CLI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Reference Manual"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vcl">
+<span id="reference-vcl"></span><h1>VCL<a class="headerlink" href="#vcl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="varnish-configuration-language">
+<h2>Varnish Configuration Language<a class="headerlink" href="#varnish-configuration-language" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>DESCRIPTION<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>The VCL language is a small domain-specific language designed to be
+used to describe request handling and document caching policies for
+Varnish Cache.</p>
+<p>When a new configuration is loaded, the varnishd management process
+translates the VCL code to C and compiles it to a shared object which
+is then loaded into the server process.</p>
+<p>This document focuses on the syntax of the VCL language. For a full
+description of syntax and semantics, with ample examples, please see
+the online documentation at <a class="reference external" href="https://www.varnish-cache.org/docs/">https://www.varnish-cache.org/docs/</a> .</p>
+<p>Starting with Varnish 4.0, each VCL file must start by declaring its version
+with a special &#8220;vcl 4.0;&#8221; marker at the top of the file.</p>
+<div class="section" id="operators">
+<h4>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h4>
+<p>The following operators are available in VCL:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>=</dt>
+<dd>Assignment operator.</dd>
+</dl>
+<dl class="docutils">
+<dt>==</dt>
+<dd>Comparison.</dd>
+</dl>
+<dl class="docutils">
+<dt>~</dt>
+<dd>Match. Can either be used with regular expressions or ACLs.</dd>
+</dl>
+<dl class="docutils">
+<dt>!</dt>
+<dd>Negation.</dd>
+</dl>
+<dl class="docutils">
+<dt>&amp;&amp;</dt>
+<dd>Logical and.</dd>
+</dl>
+<dl class="docutils">
+<dt>||</dt>
+<dd>Logical or.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="conditionals">
+<h4>Conditionals<a class="headerlink" href="#conditionals" title="Permalink to this headline">¶</a></h4>
+<p>VCL has <em>if</em> and <em>else</em> statements. Nested logic can be implemented
+with the <em>elseif</em> statement. (<em>elsif</em>/<em>elif</em>/<em>else if</em> is equivalent.)</p>
+<p>Note that are no loops or iterators of any kind in VCL.</p>
+</div>
+<div class="section" id="strings-booleans-time-duration-and-integers">
+<h4>Strings, booleans, time, duration and integers<a class="headerlink" href="#strings-booleans-time-duration-and-integers" title="Permalink to this headline">¶</a></h4>
+<p>These are the data types in Varnish. You can <em>set</em> or <em>unset</em> these.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre>set req.http.User-Agent = &quot;unknown&quot;;
+unset req.http.Range;
+</pre></div>
+</div>
+<div class="section" id="strings">
+<h5>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h5>
+<p>Basic strings are enclosed in double quotes (&#8221; ... &#8221;), and may not contain
+newlines. Long strings are enclosed in {&#8221; ... &#8220;}. They may contain any
+character including single double quotes (&#8221;), newline and other control
+characters except for the NUL (0x00) character.</p>
+</div>
+<div class="section" id="booleans">
+<h5>Booleans<a class="headerlink" href="#booleans" title="Permalink to this headline">¶</a></h5>
+<p>Booleans can be either <em>true</em> or <em>false</em>.</p>
+</div>
+</div>
+<div class="section" id="time">
+<h4>Time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h4>
+<p>VCL has time. The function <em>now</em> returns a time. A duration can be
+added to a time to make another time. In string context they return a
+formatted string.</p>
+</div>
+<div class="section" id="durations">
+<h4>Durations<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h4>
+<p>Durations are defined by a number and a designation. The number can be a real
+so 1.5w is allowed.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>ms</dt>
+<dd>milliseconds</dd>
+<dt>s</dt>
+<dd>seconds</dd>
+<dt>m</dt>
+<dd>minutes</dd>
+<dt>h</dt>
+<dd>hours</dd>
+<dt>d</dt>
+<dd>days</dd>
+<dt>w</dt>
+<dd>weeks</dd>
+<dt>y</dt>
+<dd>years</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="integers">
+<h4>Integers<a class="headerlink" href="#integers" title="Permalink to this headline">¶</a></h4>
+<p>Certain fields are integers, used as expected. In string context they
+return a string.</p>
+</div>
+<div class="section" id="real-numbers">
+<h4>Real numbers<a class="headerlink" href="#real-numbers" title="Permalink to this headline">¶</a></h4>
+<p>VCL und.txtands real numbers. As with integers, when used in a string
+context they will return a string.</p>
+</div>
+<div class="section" id="regular-expressions">
+<h4>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h4>
+<p>Varnish uses Perl-compatible regular expressions (PCRE). For a
+complete description please see the pcre(3) man page.</p>
+<p>To send flags to the PCRE engine, such as to do case insensitive matching, add
+the flag within parens following a question mark, like this:</p>
+<div class="highlight-python"><div class="highlight"><pre># If host is NOT example dot com..
+if (req.http.host !~ &quot;(?i)example.com$&quot;) {
+    ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="include-statement">
+<h4>Include statement<a class="headerlink" href="#include-statement" title="Permalink to this headline">¶</a></h4>
+<p>To include a VCL file in another file use the include keyword:</p>
+<div class="highlight-python"><div class="highlight"><pre>include &quot;foo.vcl&quot;;
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-statement">
+<h4>Import statement<a class="headerlink" href="#import-statement" title="Permalink to this headline">¶</a></h4>
+<p>The <em>import</em> statement is used to load Varnish Modules (VMODs.)</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre>import std;
+sub vcl_recv {
+    std.log(&quot;foo&quot;);
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="backend-definition">
+<h4>Backend definition<a class="headerlink" href="#backend-definition" title="Permalink to this headline">¶</a></h4>
+<p>A backend declaration creates and initialises a named backend object. A
+declaration start with the keyword <em>backend</em> followed by the name of the
+backend. The actual declaration is in curly brackets, in a key/value fashion.:</p>
+<div class="highlight-python"><div class="highlight"><pre>backend name {
+    .attribute = &quot;value&quot;;
+}
+</pre></div>
+</div>
+<p>The only mandatory attribute is <em>host</em>. The attributes will inherit
+their defaults from the global parameters. The following attributes
+are available:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>host (mandatory)</dt>
+<dd>The host to be used. IP address or a hostname that resolves to a
+single IP address.</dd>
+<dt>port</dt>
+<dd>The port on the backend that Varnish should connect to.</dd>
+<dt>host_header</dt>
+<dd>A host header to add.</dd>
+<dt>connect_timeout</dt>
+<dd>Timeout for connections.</dd>
+<dt>f.txt_byte_timeout</dt>
+<dd>Timeout for f.txt byte.</dd>
+<dt>between_bytes_timeout</dt>
+<dd>Timeout between bytes.</dd>
+<dt>probe</dt>
+<dd>Attach a probe to the backend. See Probes.</dd>
+<dt>max_connections</dt>
+<dd>Maximum number of open connections towards this backend. If
+Varnish reaches the maximum Varnish it will start failing
+connections.</dd>
+</dl>
+</div></blockquote>
+<p>Backends can be used with <em>directors</em>. Please see the
+vmod_directors(3) man page for more information.</p>
+</div>
+<div class="section" id="probes">
+<h4>Probes<a class="headerlink" href="#probes" title="Permalink to this headline">¶</a></h4>
+<p>Probes will query the backend for status on a regular basis and mark
+the backend as down it they fail. A probe is defined as this::</p>
+<div class="highlight-python"><div class="highlight"><pre>probe name {
+     .attribute = &quot;value&quot;;
+}
+</pre></div>
+</div>
+<p>There are no mandatory options. These are the options you can set:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>url</dt>
+<dd>The URL to query. Defaults to &#8220;/&#8221;.</dd>
+<dt>request</dt>
+<dd>Specify a full HTTP request using multiple strings. .request will
+have rn automatically inserted after every string. If specified,
+.request will take precedence over .url.</dd>
+<dt>expected_response</dt>
+<dd>The expected HTTP response code. Defaults to 200.</dd>
+<dt>timeout</dt>
+<dd>The timeout for the probe. Default is 2s.</dd>
+<dt>interval</dt>
+<dd>How often the probe is run. Default is 5s.</dd>
+<dt>initial</dt>
+<dd>How many of the polls in .window are considered good when Varnish
+starts. Defaults to the value of threshold - 1. In this case, the
+backend starts as sick and requires one single poll to be
+considered healthy.</dd>
+<dt>window</dt>
+<dd>How many of the latest polls we examine to determine backend health.
+Defaults to 8.</dd>
+<dt>threshold</dt>
+<dd>How many of the polls in .window must have succeeded for us to
+consider the backend healthy. Defaults to 3.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="access-control-list-acl">
+<h4>Access Control List (ACL)<a class="headerlink" href="#access-control-list-acl" title="Permalink to this headline">¶</a></h4>
+<p>An Access Control List (ACL) declaration creates and initialises a named access
+control list which can later be used to match client addresses:</p>
+<div class="highlight-python"><div class="highlight"><pre>acl localnetwork {
+    &quot;localhost&quot;;    # myself
+    &quot;192.0.2.0&quot;/24; # and everyone on the local network
+    ! &quot;192.0.2.23&quot;; # except for the dial-in router
+}
+</pre></div>
+</div>
+<p>If an ACL entry specifies a host name which Varnish is unable to
+resolve, it will match any address it is compared to. Consequently,
+if it is preceded by a negation mark, it will reject any address it is
+compared to, which may not be what you intended. If the entry is
+enclosed in parentheses, however, it will simply be ignored.</p>
+<p>To match an IP address against an ACL, simply use the match operator:</p>
+<div class="highlight-python"><div class="highlight"><pre>if (client.ip ~ localnetwork) {
+    return (pipe);
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="vcl-objects">
+<h4>VCL objects<a class="headerlink" href="#vcl-objects" title="Permalink to this headline">¶</a></h4>
+<p>A VCL object can be made with the <em>new</em> keyword.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_init {
+    new b = directors.round_robin()
+    b.add_backend(node1);
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="subroutines">
+<h4>Subroutines<a class="headerlink" href="#subroutines" title="Permalink to this headline">¶</a></h4>
+<p>A subroutine is used to group code for legibility or reusability:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub pipe_if_local {
+    if (client.ip ~ localnetwork) {
+        return (pipe);
+    }
+}
+</pre></div>
+</div>
+<p>Subroutines in VCL do not take arguments, nor do they return
+values. The built in subroutines all have names beginning with vcl_,
+which is reserved.</p>
+<p>To call a subroutine, use the call keyword followed by the subroutine&#8217;s name:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_recv {
+    call pipe_if_local;
+}
+</pre></div>
+</div>
+<div class="section" id="return-statements">
+<h5>Return statements<a class="headerlink" href="#return-statements" title="Permalink to this headline">¶</a></h5>
+<p>The ongoing vcl_* subroutine execution ends when a return(<em>action</em>) statement
+is made.</p>
+<p>The <em>action</em> specifies how execution should proceed. The context defines
+which actions are available.</p>
+</div>
+<div class="section" id="multiple-subroutines">
+<h5>Multiple subroutines<a class="headerlink" href="#multiple-subroutines" title="Permalink to this headline">¶</a></h5>
+<p>If multiple subroutines with the name of one of the built-in ones are defined,
+they are concatenated in the order in which they appear in the source.</p>
+<p>The built-in VCL distributed with Varnish will be implicitly concatenated
+when the VCL is compiled.</p>
+</div>
+</div>
+<div class="section" id="variables">
+<h4>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h4>
+<p>In VCL you have access to certain variable objects. These contain
+requests and responses currently being worked on. What variables are
+available depends on context.</p>
+</div>
+<div class="section" id="functions">
+<h4>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h4>
+<p>The following built-in functions are available:</p>
+<dl class="docutils">
+<dt>ban(expression)</dt>
+<dd>Invalidates all objects in cache that match the expression with the
+ban mechanism.</dd>
+<dt>call(subroutine)</dt>
+<dd>Run a VCL subroutine within the current scope.</dd>
+<dt>hash_data(input)</dt>
+<dd>Adds an input to the hash input. In the built-in VCL hash_data()
+is called on the host and URL of the <em>request</em>. Available in vcl_hash.</dd>
+<dt>new()</dt>
+<dd>Instanciate a new VCL object. Available in vcl_init.</dd>
+<dt>return()</dt>
+<dd>End execution of the current VCL subroutine, and continue to the next step
+in the request handling state machine.</dd>
+<dt>rollback()</dt>
+<dd>Restore request HTTP headers to their original state.</dd>
+<dt>synthetic(STRING)</dt>
+<dd>Prepare a synthetic response body containing the STRING. Available in
+vcl_synth and vcl_backend_error.</dd>
+</dl>
+<dl class="docutils">
+<dt>regsub(str, regex, sub)</dt>
+<dd>Returns a copy of str with the f.txt occurrence of the regular
+expression regex replaced with sub. Within sub, \0 (which can
+also be spelled \&amp;) is replaced with the entire matched string,
+and \n is replaced with the contents of subgroup n in the
+matched string.</dd>
+<dt>regsuball(str, regex, sub)</dt>
+<dd>As regsub() but this replaces all occurrences.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>EXAMPLES<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>For examples, please see the online documentation.</p>
+</div>
+<div class="section" id="see-also">
+<h3>SEE ALSO<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>varnishd(1)</li>
+<li>vmod_directors(3)</li>
+<li>vmod_std(3)</li>
+</ul>
+</div>
+<div class="section" id="history">
+<h3>HISTORY<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h3>
+<p>VCL was developed by Poul-Henning Kamp in cooperation with Verdens
+Gang AS, Redpill Linpro and Varnish Software.  This manual page is
+written by Per Buer, Poul-Henning Kamp, Martin Blix Grydeland,
+Kristian Lyngstøl, Lasse K.txtensen and possibly others.</p>
+</div>
+<div class="section" id="copyright">
+<h3>COPYRIGHT<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h3>
+<p>This document is licensed under the same license as Varnish
+itself. See LICENSE for details.</p>
+<ul class="simple">
+<li>Copyright (c) 2006 Verdens Gang AS</li>
+<li>Copyright (c) 2006-2014 Varnish Software AS</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">VCL</a><ul>
+<li><a class="reference internal" href="#varnish-configuration-language">Varnish Configuration Language</a><ul>
+<li><a class="reference internal" href="#description">DESCRIPTION</a><ul>
+<li><a class="reference internal" href="#operators">Operators</a></li>
+<li><a class="reference internal" href="#conditionals">Conditionals</a></li>
+<li><a class="reference internal" href="#strings-booleans-time-duration-and-integers">Strings, booleans, time, duration and integers</a><ul>
+<li><a class="reference internal" href="#strings">Strings</a></li>
+<li><a class="reference internal" href="#booleans">Booleans</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#time">Time</a></li>
+<li><a class="reference internal" href="#durations">Durations</a></li>
+<li><a class="reference internal" href="#integers">Integers</a></li>
+<li><a class="reference internal" href="#real-numbers">Real numbers</a></li>
+<li><a class="reference internal" href="#regular-expressions">Regular Expressions</a></li>
+<li><a class="reference internal" href="#include-statement">Include statement</a></li>
+<li><a class="reference internal" href="#import-statement">Import statement</a></li>
+<li><a class="reference internal" href="#backend-definition">Backend definition</a></li>
+<li><a class="reference internal" href="#probes">Probes</a></li>
+<li><a class="reference internal" href="#access-control-list-acl">Access Control List (ACL)</a></li>
+<li><a class="reference internal" href="#vcl-objects">VCL objects</a></li>
+<li><a class="reference internal" href="#subroutines">Subroutines</a><ul>
+<li><a class="reference internal" href="#return-statements">Return statements</a></li>
+<li><a class="reference internal" href="#multiple-subroutines">Multiple subroutines</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#variables">Variables</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples">EXAMPLES</a></li>
+<li><a class="reference internal" href="#see-also">SEE ALSO</a></li>
+<li><a class="reference internal" href="#history">HISTORY</a></li>
+<li><a class="reference internal" href="#copyright">COPYRIGHT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">The Varnish Reference Manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="varnish-cli.html"
+                        title="next chapter">Varnish CLI</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/vcl.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="varnish-cli.html" title="Varnish CLI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Reference Manual"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>把他们叫做autocrap工具？ &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Poul-Hennings random outb.txts" href="index.html" />
+    <link rel="next" title="Why Sphinx and reStructuredText ?" href="sphinx.html" />
+    <link rel="prev" title="What were they thinking ?" href="thoughts.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sphinx.html" title="Why Sphinx and reStructuredText ?"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="thoughts.html" title="What were they thinking ?"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Poul-Hennings random outb.txts</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="autocrap">
+<span id="phk-autocrap"></span><h1>把他们叫做autocrap工具？<a class="headerlink" href="#autocrap" title="Permalink to this headline">¶</a></h1>
+<p>是的，实时上我也确实这样做的，因为它们可能糟糕到无法解决自己产生的问题。</p>
+<p>回溯到1980年代，众多小型和微型计算机公司都跳上UNIX这辆旅行车，因为对这些厂商硬件来说会给他们一个操作系统。但是他们也尝试从竞争对手中&#8221;区分&#8221;自己，通过&#8221;增加价值&#8221;。</p>
+<p>这些&#8221;价值&#8221;结果是不兼容。</p>
+<p>如果存在一个编译器就开始使用，否则你绝不会知道为了这样表现的更理智些，他们应该把东西放在哪和使用什么样的参数编译。</p>
+<p>所以，一些疯狂的点子源于 <tt class="docutils literal"><span class="pre">configure</span></tt> 脚本，这些配置通过嗅一嗅你的系统里面，并建立一个 <tt class="docutils literal"><span class="pre">Makefile</span></tt> 文件，就工作。</p>
+<p>写配置脚本是一项辛苦的工作，一个原因就在于你需要有很多系统要测试他们运行，所以现在copy&amp;paste就成了习惯。</p>
+<p>后有了更疯狂的想法，源于为了配置脚本编写脚本，经过一个&#8221;史上最疯狂&#8221;人大胆的尝试，用一个不起眼且难以让人忍受，称为``m4``的宏处理器来做完成这些实施。</p>
+<p>现在，随着发展，编写规范配置生产的宏比较乏味，所有人编写了一个工具……</p>
+<p>...你是否检验了模式？</p>
+<p>如果现在，这些废话的结果情况是，写一个开源代码并且能告诉文件是什么地方的工具，事实上*相信*这些事情会有结果，那么我可以忍受。</p>
+<p>但是如果这会蒸发，那么这就不是问题原因。一方面，所有的autocrap工具增加一层版本当你获得正确结果，这些在你考虑重新编译源码前。</p>
+<p>次，这实际上并没有工作，你仍然必须做的辛勤工作，并找出正确的方式来解释autocrap工具。你正在尝试做什么和怎么做的，只有你必须这样做以一种可以生产M4宏调用语言的方式等。</p>
+<p>在此期间，UNIX的多样性在50多个显著不同的方面，只有少数缩水：Linux, <a href="#id1"><span class="problematic" id="id2">*</span></a>BSD, Solaris和AIX
+还有autocrap工具都已变成了问题的一部分，而不是解决方案的一部分。</p>
+<p>Varnish中生成autocrap的问题是：</p>
+<ul class="simple">
+<li>找ANSI-C头文件（能为我展示一个1995后不用这个的系统吗？</li>
+<li>在并支持POSIX强制符号链接，（这没有在Varnish中使用）</li>
+<li>试19种不同的方式，编译器</li>
+<li>查是否ISO-C和POSIX授权 <tt class="docutils literal"><span class="pre">cos()</span></tt> 函数存在于 <tt class="docutils literal"><span class="pre">libm</span></tt> (不，我也不清楚...)</li>
+</ul>
+<p>……</p>
+<p>有一天有时间时，我会撕碎所有autocrap所有的东西，然后用5行shell脚本取代，可以叫 <tt class="docutils literal"><span class="pre">uname</span> <span class="pre">-s</span></tt> .</p>
+<p>Poul-Henning, 2010-04-20</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="thoughts.html"
+                        title="previous chapter">What were they thinking ?</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sphinx.html"
+                        title="next chapter">Why Sphinx and reStructuredText ?</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/phk/autocrap.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sphinx.html" title="Why Sphinx and reStructuredText ?"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="thoughts.html" title="What were they thinking ?"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Poul-Hennings random outb.txts</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

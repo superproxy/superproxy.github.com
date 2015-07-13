@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Varnish安装 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="next" title="前提条件" href="prerequisites.html" />
+    <link rel="prev" title="Varnish 管理员文档" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="prerequisites.html" title="前提条件"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Varnish 管理员文档"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnish">
+<span id="install-index"></span><h1>Varnish安装<a class="headerlink" href="#varnish" title="Permalink to this headline">¶</a></h1>
+<p>本节包括安装前提条件、一步一步的安装步骤、如何获得帮助以及如何报告故障，也包括一些平台相关的提示,这些提示用来帮助你在特定平台上安装Varnish。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">前提条件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">安装Varnish</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#id1">源代码 或 安装包?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#freebsd">FreeBSD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#red-hat-centos">Red Hat / CentOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#debian-ubuntu">Debian/Ubuntu</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html#id2">从源代码中编译Varnish</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#debain-ubuntu">在Debain / Ubuntu上构建依赖包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#id3">编译Varnish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#id6">安装</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Getting help</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="help.html#irc-channel">IRC Channel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="help.html#mailing-lists">Mailing Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="help.html#trouble-tickets">Trouble Tickets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="help.html#commercial-support">Commercial Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bugs.html">Reporting bugs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bugs.html#varnish-crashes">Varnish crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bugs.html#varnish-goes-on-vacation">Varnish goes on vacation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bugs.html#varnish-does-something-wrong">Varnish does something wrong</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="platformnotes.html">Platform specific notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="platformnotes.html#transparent-hugepages-on-redhat-enterprise-linux-6">Transparent hugepages on Redhat Enterprise Linux 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platformnotes.html#openvz">OpenVZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platformnotes.html#tcp-keep-alive-configuration">TCP keep-alive configuration</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Varnish 管理员文档</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="prerequisites.html"
+                        title="next chapter">前提条件</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/installation/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="prerequisites.html" title="前提条件"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Varnish 管理员文档"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

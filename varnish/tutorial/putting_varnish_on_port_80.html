@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>让Varnish监听80端口 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Varnish教程" href="index.html" />
+    <link rel="next" title="后端服务器" href="backend_servers.html" />
+    <link rel="prev" title="启动Varnish" href="starting_varnish.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="backend_servers.html" title="后端服务器"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="启动Varnish"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnish80">
+<h1>让Varnish监听80端口<a class="headerlink" href="#varnish80" title="Permalink to this headline">¶</a></h1>
+<p>到现在为止，我们都是设置Varnish监听一个高位端口以便测试，现在，我们要让Varnish监听默认的HTTP服务端口80端口.</p>
+<p>首先我们启动Varnish: <tt class="docutils literal"><span class="pre">service</span> <span class="pre">varnish</span> <span class="pre">stop</span></tt></p>
+<p>现在我们需要编辑启动Varnish的配置文件.</p>
+<div class="section" id="debian-ubuntu">
+<h2>Debian/Ubuntu操作系统平台<a class="headerlink" href="#debian-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>在Debian/Ubuntu操作系统平台上这个配置文件是`/etc/default/varnish`. 在这个文件中你可以看到像下面这样的文本段落:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DAEMON_OPTS</span><span class="o">=</span><span class="s">&quot;-a :6081 </span><span class="se">\</span>
+<span class="s">             -T localhost:6082 </span><span class="se">\</span>
+<span class="s">             -f /etc/varnish/default.vcl </span><span class="se">\</span>
+<span class="s">             -S /etc/varnish/secret </span><span class="se">\</span>
+<span class="s">             -s malloc,256m&quot;</span>
+</pre></div>
+</div>
+<p>把它改成:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DAEMON_OPTS</span><span class="o">=</span><span class="s">&quot;-a :80 </span><span class="se">\</span>
+<span class="s">             -T localhost:6082 </span><span class="se">\</span>
+<span class="s">             -f /etc/varnish/default.vcl </span><span class="se">\</span>
+<span class="s">             -S /etc/varnish/secret </span><span class="se">\</span>
+<span class="s">             -s malloc,256m&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="red-hat-enterprise-linux-centos">
+<h2>Red Hat Enterprise Linux / CentOS操作系统平台<a class="headerlink" href="#red-hat-enterprise-linux-centos" title="Permalink to this headline">¶</a></h2>
+<p>在Red Hat Enterprise Linux / CentOS操作系统平台类似的配置文件是`/etc/sysconfig/varnish`.</p>
+</div>
+</div>
+<div class="section" id="varnish">
+<h1>重启Varnish<a class="headerlink" href="#varnish" title="Permalink to this headline">¶</a></h1>
+<p>改完配置文件之后, 重启Varnish: <tt class="docutils literal"><span class="pre">service</span> <span class="pre">varnish</span> <span class="pre">start</span></tt>.</p>
+<p>现在任何人想访问你的网站，访问请求都会经过Varnish.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">让Varnish监听80端口</a><ul>
+<li><a class="reference internal" href="#debian-ubuntu">Debian/Ubuntu操作系统平台</a></li>
+<li><a class="reference internal" href="#red-hat-enterprise-linux-centos">Red Hat Enterprise Linux / CentOS操作系统平台</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#varnish">重启Varnish</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="starting_varnish.html"
+                        title="previous chapter">启动Varnish</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="backend_servers.html"
+                        title="next chapter">后端服务器</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/putting_varnish_on_port_80.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="backend_servers.html" title="后端服务器"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="启动Varnish"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+
+让Varnish监听80端口
+----------------------
+
+到现在为止，我们都是设置Varnish监听一个高位端口以便测试，现在，我们要让Varnish监听默认的HTTP服务端口80端口.
+
+首先我们启动Varnish: ``service varnish stop``
+
+现在我们需要编辑启动Varnish的配置文件.
+
+Debian/Ubuntu操作系统平台
+~~~~~~~~~~~~~
+
+在Debian/Ubuntu操作系统平台上这个配置文件是`/etc/default/varnish`. 在这个文件中你可以看到像下面这样的文本段落::
+
+  DAEMON_OPTS="-a :6081 \
+               -T localhost:6082 \
+               -f /etc/varnish/default.vcl \
+               -S /etc/varnish/secret \
+               -s malloc,256m"
+
+把它改成::
+
+  DAEMON_OPTS="-a :80 \
+               -T localhost:6082 \
+               -f /etc/varnish/default.vcl \
+               -S /etc/varnish/secret \
+               -s malloc,256m"
+
+Red Hat Enterprise Linux / CentOS操作系统平台
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在Red Hat Enterprise Linux / CentOS操作系统平台类似的配置文件是`/etc/sysconfig/varnish`.
+
+
+重启Varnish
+------------------------
+
+改完配置文件之后, 重启Varnish: ``service varnish start``.
+
+现在任何人想访问你的网站，访问请求都会经过Varnish.
+

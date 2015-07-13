@@ -1,0 +1,29 @@
+.. _phk:
+
+Poul-Hennings random outb.txts
+==============================
+
+You may or may not want to know what Poul-Henning thinks.
+
+.. toctree::
+	:maxdepth: 1
+
+	persistent.txt
+	dough.txt
+	wanton_destruction.txt
+	spdy.txt
+	http20.txt
+	varnish_does_not_hash.txt
+	thetoolsweworkwith.txt
+	three-zero.txt
+	ssl.txt
+	gzip.txt
+	vcl_expr.txt
+	ipv6suckage.txt
+	backends.txt
+	platforms.txt
+	barriers.txt
+	thoughts.txt
+	autocrap.txt
+	sphinx.txt
+

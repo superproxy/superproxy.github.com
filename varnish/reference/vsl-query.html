@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Varnish VSL Query Expressions &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="The Varnish Reference Manual" href="index.html" />
+    <link rel="next" title="What’s new in Varnish 4.0" href="../whats-new/index.html" />
+    <link rel="prev" title="VSL" href="vsl.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../whats-new/index.html" title="What’s new in Varnish 4.0"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vsl.html" title="VSL"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnish-vsl-query-expressions">
+<span id="ref-vsl-query"></span><h1>Varnish VSL Query Expressions<a class="headerlink" href="#varnish-vsl-query-expressions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>OVERVIEW<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The Varnish VSL Query Expressions extracts transactions from the
+Varnish shared memory log, and perform queries on the transactions
+before reporting matches.</p>
+<p>A transaction is a set of log lines that belongs together, e.g. a
+client request or a backend request. The API monitors the log, and
+collects all log records that make up a transaction before reporting
+on that transaction. Transactions can also be grouped, meaning backend
+transactions are reported together with the client transaction that
+initiated it.</p>
+<p>A query is run on a group of transactions. A query expression is true
+if there is a log record within the group that satisfies the
+condition. It is false only if none of the log records satisfies the
+condition. Query expressions can be combined using boolean functions.</p>
+</div>
+<div class="section" id="grouping">
+<h2>GROUPING<a class="headerlink" href="#grouping" title="Permalink to this headline">¶</a></h2>
+<p>When grouping transactions, there is a hierarchy structure showing
+which transaction initiated what. The level increases by one by an
+&#8216;initiated by&#8217; relation, so for example a backend transaction will
+have one higher level than the client transaction that initiated it on
+a cache miss. Request restart transactions does not have it&#8217;s level
+increased. This is to help predicting the level for a given
+transaction.</p>
+<p>Levels start counting at 1, except when using raw where it will always
+be 0.</p>
+<p>The grouping modes are:</p>
+<ul>
+<li><p class="first">Session</p>
+<p>All transactions initiated by a client connection are reported
+together. All log data is buffered until the client connection is
+closed, which can cause session grouping mode to potentially consume
+a lot of memory.</p>
+</li>
+<li><p class="first">Request</p>
+<p>Transactions are grouped by request, where the set will include the
+request itself as well as any backend requests or ESI-subrequests.
+Session data is not reported. This is the default.</p>
+</li>
+<li><p class="first">VXID</p>
+<p>Transactions are not grouped, so each VXID is reported in it&#8217;s
+entirety. Sessions, requests, ESI-requests and backend requests are
+all reported individually. Non-transactional data is not reported
+(VXID == 0).</p>
+</li>
+<li><p class="first">Raw</p>
+<p>Every log record will make up a transaction of it&#8217;s own. All data,
+including non-transactional data will be reported.</p>
+</li>
+</ul>
+<p>Example transaction hierarchy</p>
+<div class="highlight-python"><div class="highlight"><pre>Lvl 1: Client request (cache miss)
+  Lvl 2: Backend request
+  Lvl 2: ESI subrequest (cache miss)
+    Lvl 3: Backend request
+    Lvl 3: Backend request (VCL restart)
+    Lvl 3: ESI subrequest (cache miss)
+      Lvl 4: Backend request
+  Lvl 2: ESI subrequest (cache hit)
+</pre></div>
+</div>
+</div>
+<div class="section" id="query-language">
+<h2>QUERY LANGUAGE<a class="headerlink" href="#query-language" title="Permalink to this headline">¶</a></h2>
+<p>A query expression consists of record selection criteria, and
+optionally an operator and a value to match against the selected
+records.</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;record selection criteria&gt; &lt;operator&gt; &lt;operand&gt;
+</pre></div>
+</div>
+<div class="section" id="record-selection-criteria">
+<h3>Record selection criteria<a class="headerlink" href="#record-selection-criteria" title="Permalink to this headline">¶</a></h3>
+<p>The record selection criteria determines what kind records from the
+transaction group the expression applies to. Syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre>{level}taglist:record-prefix[field]
+</pre></div>
+</div>
+<p>Taglist is mandatory, the other components are optional.</p>
+<p>The level limits the expression to a transaction at that level. If
+left unspecified, the expression is applied to transactions at all
+levels. Level is a positive integer or zero. If level is followed by a
+&#8216;+&#8217; character, it expresses greater than or equal. If level is
+followed by a &#8216;-&#8216;, it expresses less than or equal.</p>
+<p>The taglist is a comma-separated list of VSL record tags that this
+expression should be checked against. Each list element can be a tag
+name or a tag glob. Globs allow a &#8216;*&#8217; either in the beginning of
+the name or at the end, and will select all tags that match either the
+prefix or subscript. A single &#8216;*&#8217; will select all tags.</p>
+<p>The record prefix will further limit the matches to those records that
+has this prefix as it&#8217;s first part of the record content followed by a
+colon. The part of the log record matched against will then be limited
+to what follows the prefix and colon. This is useful when matching
+against specific HTTP headers. The record prefix matching is done case
+insensitive.</p>
+<p>The field will, if present, treat the log record as a white space
+separated list of fields, and only the nth part of the record will be
+matched against. Fields start counting at 1.</p>
+<p>An expression using only a record selection criteria will be true if
+there is any record in the transaction group that is selected by the
+criteria.</p>
+</div>
+<div class="section" id="operators">
+<h3>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h3>
+<p>The following matching operators are available:</p>
+<ul>
+<li><p class="first">== != &lt; &lt;= &gt; &gt;=</p>
+<p>Numerical comparison. The record contents will be converted to
+either an integer or a float before comparison, depending on the
+type of the operand.</p>
+</li>
+<li><p class="first">eq ne</p>
+<p>String comparison. &#8216;eq&#8217; tests string equality, &#8216;ne&#8217; tests for not
+equality.</p>
+</li>
+<li><p class="first">~ !~</p>
+<p>Regular expression matching. &#8216;~&#8217; is a positive match, &#8216;!~&#8217; is a
+non-match.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="operand">
+<h3>Operand<a class="headerlink" href="#operand" title="Permalink to this headline">¶</a></h3>
+<p>The operand is the value the selected records will be matched
+against.</p>
+<p>An operand can be quoted or unquoted. Quotes can be either single or
+double quotes, and for quoted operands a backslash can be used to
+escape the quotes.</p>
+<p>Unquoted operands can only consist of the following characters:</p>
+<div class="highlight-python"><div class="highlight"><pre>a-z A-Z 0-9 + - _ . *
+</pre></div>
+</div>
+<p>The following types of operands are available:</p>
+<ul>
+<li><p class="first">Integer</p>
+<p>A number without any fractional part, valid for the numerical
+comparison operators. The integer type is used when the operand does
+not contain any period (.) characters.</p>
+</li>
+<li><p class="first">Float</p>
+<p>A number with a fractional part, valid for the numerical comparison
+operators. The float type is used when the operand does contain a
+period (.) character.</p>
+</li>
+<li><p class="first">String</p>
+<p>A sequence of characters, valid for the string equality operators.</p>
+</li>
+<li><p class="first">Regular expression</p>
+<p>A PCRE regular expression. Valid for the regular expression
+operators.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="boolean-functions">
+<h3>Boolean functions<a class="headerlink" href="#boolean-functions" title="Permalink to this headline">¶</a></h3>
+<p>Query expressions can be linked together using boolean functions. The
+following are available, in decreasing precedence:</p>
+<ul>
+<li><p class="first">not &lt;expr&gt;</p>
+<p>Inverts the result of &lt;expr&gt;</p>
+</li>
+<li><p class="first">&lt;expr1&gt; and &lt;expr2&gt;</p>
+<p>True only if both expr1 and expr2 are true</p>
+</li>
+<li><p class="first">&lt;expr1&gt; or &lt;expr2&gt;</p>
+<p>True if either of expr1 or expr2 is true</p>
+</li>
+</ul>
+<p>Expressions can be grouped using parenthesis.</p>
+</div>
+</div>
+<div class="section" id="query-expression-examples">
+<h2>QUERY EXPRESSION EXAMPLES<a class="headerlink" href="#query-expression-examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Transaction group contains a request URL that equals to &#8220;/foo&#8221;</p>
+<div class="highlight-python"><div class="highlight"><pre>ReqURL eq &quot;/foo&quot;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transaction group contains a request cookie header</p>
+<div class="highlight-python"><div class="highlight"><pre>ReqHeader:cookie
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transaction group doesn&#8217;t contain a request cookie header</p>
+<div class="highlight-python"><div class="highlight"><pre>not ReqHeader:cookie
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transaction group contains a request user-agent header that contains
+&#8220;iPod&#8221; and the request delivery time exceeds 1 second</p>
+<div class="highlight-python"><div class="highlight"><pre>ReqHeader:user-agent ~ &quot;iPod&quot; and ReqEnd[5] &gt; 1.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transaction group contains a backend response status larger than or
+equal to 500</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">BerespStatus</span> <span class="o">&gt;=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transaction group contains a request response status of 304, but
+where the request did not contain an if-modified-since header</p>
+<div class="highlight-python"><div class="highlight"><pre>ReqStatus == 304 and not ReqHeader:if-modified-since
+</pre></div>
+</div>
+</li>
+<li><p class="first">Transactions that have had backend failures or long delivery time on
+their ESI subrequests. (Assumes request grouping mode).</p>
+<div class="highlight-python"><div class="highlight"><pre>BerespStatus &gt;= 500 or {2+}ReqEnd[5] &gt; 1.
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="history">
+<h2>HISTORY<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<p>This document was written by Martin Blix Grydeland.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Varnish VSL Query Expressions</a><ul>
+<li><a class="reference internal" href="#overview">OVERVIEW</a></li>
+<li><a class="reference internal" href="#grouping">GROUPING</a></li>
+<li><a class="reference internal" href="#query-language">QUERY LANGUAGE</a><ul>
+<li><a class="reference internal" href="#record-selection-criteria">Record selection criteria</a></li>
+<li><a class="reference internal" href="#operators">Operators</a></li>
+<li><a class="reference internal" href="#operand">Operand</a></li>
+<li><a class="reference internal" href="#boolean-functions">Boolean functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#query-expression-examples">QUERY EXPRESSION EXAMPLES</a></li>
+<li><a class="reference internal" href="#history">HISTORY</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vsl.html"
+                        title="previous chapter">VSL</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../whats-new/index.html"
+                        title="next chapter">What&#8217;s new in Varnish 4.0</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/vsl-query.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../whats-new/index.html" title="What’s new in Varnish 4.0"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vsl.html" title="VSL"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

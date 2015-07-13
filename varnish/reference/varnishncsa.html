@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>varnishncsa &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="The Varnish Reference Manual" href="index.html" />
+    <link rel="next" title="varnishreplay" href="varnishreplay.html" />
+    <link rel="prev" title="varnishlog" href="varnishlog.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="varnishreplay.html" title="varnishreplay"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="varnishlog.html" title="varnishlog"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnishncsa">
+<span id="ref-varnishncsa"></span><h1>varnishncsa<a class="headerlink" href="#varnishncsa" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="display-varnish-logs-in-apache-ncsa-combined-log-format">
+<h2>Display Varnish logs in Apache / NCSA combined log format<a class="headerlink" href="#display-varnish-logs-in-apache-ncsa-combined-log-format" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="synopsis">
+<h3>SYNOPSIS<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h3>
+<p>varnishncsa <a href="#id1"><span class="problematic" id="id2">|synopsis|</span></a></p>
+</div>
+<div class="section" id="description">
+<h3>DESCRIPTION<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>The varnishncsa utility reads varnishd(1) shared memory logs and
+presents them in the Apache / NCSA &#8220;combined&#8221; log format.</p>
+<p>Each log line produced is based on a single Request type transaction
+gathered from the shared memory log. The Request transaction is then
+scanned for the relevant parts in order to output one log line. To
+filter the log lines produced, use the query language to select the
+applicable transactions. Non-request transactions are ignored.</p>
+<p>The following options are available:</p>
+</div>
+<div class="section" id="format">
+<h3>FORMAT<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h3>
+<p>Specify the log format used. If no format is specified the default log
+format is used.</p>
+<p>The default log format is:</p>
+<div class="highlight-python"><div class="highlight"><pre>%h %l %u %t &quot;%r&quot; %s %b &quot;%{Referer}i&quot; &quot;%{User-agent}i&quot;
+</pre></div>
+</div>
+<p>Escape sequences \n and \t are supported.</p>
+<p>Supported formatters are:</p>
+<dl class="docutils">
+<dt>%b</dt>
+<dd>Size of response in bytes, excluding HTTP headers.  In CLF format,
+i.e. a &#8216;-&#8216; rather than a 0 when no bytes are sent.</dd>
+<dt>%D</dt>
+<dd>Time taken to serve the request, in microseconds.</dd>
+<dt>%H</dt>
+<dd>The request protocol. Defaults to HTTP/1.0 if not known.</dd>
+<dt>%h</dt>
+<dd>Remote host. Defaults to &#8216;-&#8216; if not known.</dd>
+<dt>%I</dt>
+<dd>Total bytes received from client.</dd>
+<dt>%{X}i</dt>
+<dd>The contents of request header X.</dd>
+<dt>%l</dt>
+<dd>Remote logname (always &#8216;-&#8216;)</dd>
+<dt>%m</dt>
+<dd>Request method. Defaults to &#8216;-&#8216; if not known.</dd>
+<dt>%{X}o</dt>
+<dd>The contents of response header X.</dd>
+<dt>%O</dt>
+<dd>Total bytes sent to client.</dd>
+<dt>%q</dt>
+<dd>The query string, if no query string exists, an empty string.</dd>
+<dt>%r</dt>
+<dd>The f.txt line of the request. Synthesized from other fields, so it
+may not be the request verbatim.</dd>
+<dt>%s</dt>
+<dd>Status sent to the client</dd>
+<dt>%t</dt>
+<dd>Time when the request was received, in HTTP date/time format.</dd>
+<dt>%{X}t</dt>
+<dd>Time when the request was received, in the format specified
+by X. The time specification format is the same as for strftime(3).</dd>
+<dt>%T</dt>
+<dd>Time taken to serve the request, in seconds.</dd>
+<dt>%U</dt>
+<dd>The request URL without any query string. Defaults to &#8216;-&#8216; if not
+known.</dd>
+<dt>%u</dt>
+<dd>Remote user from auth</dd>
+<dt>%{X}x</dt>
+<dd><p class="first">Extended variables.  Supported variables are:</p>
+<dl class="last docutils">
+<dt>Varnish:time_f.txtbyte</dt>
+<dd>Time from when the request processing starts until the f.txt byte
+is sent to the client.</dd>
+<dt>Varnish:hitmiss</dt>
+<dd>Whether the request was a cache hit or miss. Pipe and pass are
+considered misses.</dd>
+<dt>Varnish:handling</dt>
+<dd>How the request was handled, whether it was a cache hit, miss,
+pass, pipe or error.</dd>
+<dt>VCL_Log:key</dt>
+<dd>Output value set by std.log(&#8220;key:value&#8221;) in VCL.</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="signals">
+<h3>SIGNALS<a class="headerlink" href="#signals" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>SIGHUP</dt>
+<dd>Rotate the log file (see -w option)</dd>
+<dt>SIGUSR1</dt>
+<dd>Flush any outstanding transactions</dd>
+</dl>
+</div>
+<div class="section" id="see-also">
+<h3>SEE ALSO<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h3>
+<p>varnishd(1)
+varnishlog(1)
+varnishstat(1)</p>
+</div>
+<div class="section" id="history">
+<h3>HISTORY<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h3>
+<p>The varnishncsa utility was developed by Poul-Henning Kamp in
+cooperation with Verdens Gang AS and Varnish Software AS. This manual page was
+initially written by Dag-Erling Smørgrav &lt;<a class="reference external" href="mailto:des&#37;&#52;&#48;des&#46;no">des<span>&#64;</span>des<span>&#46;</span>no</a>&gt;, and later updated
+by Martin Blix Grydeland.</p>
+</div>
+<div class="section" id="copyright">
+<h3>COPYRIGHT<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h3>
+<p>This document is licensed under the same licence as Varnish
+itself. See LICENCE for details.</p>
+<ul class="simple">
+<li>Copyright (c) 2006 Verdens Gang AS</li>
+<li>Copyright (c) 2006-2014 Varnish Software AS</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">varnishncsa</a><ul>
+<li><a class="reference internal" href="#display-varnish-logs-in-apache-ncsa-combined-log-format">Display Varnish logs in Apache / NCSA combined log format</a><ul>
+<li><a class="reference internal" href="#synopsis">SYNOPSIS</a></li>
+<li><a class="reference internal" href="#description">DESCRIPTION</a></li>
+<li><a class="reference internal" href="#format">FORMAT</a></li>
+<li><a class="reference internal" href="#signals">SIGNALS</a></li>
+<li><a class="reference internal" href="#see-also">SEE ALSO</a></li>
+<li><a class="reference internal" href="#history">HISTORY</a></li>
+<li><a class="reference internal" href="#copyright">COPYRIGHT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="varnishlog.html"
+                        title="previous chapter">varnishlog</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="varnishreplay.html"
+                        title="next chapter">varnishreplay</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/varnishncsa.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="varnishreplay.html" title="varnishreplay"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="varnishlog.html" title="varnishlog"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Reference Manual</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

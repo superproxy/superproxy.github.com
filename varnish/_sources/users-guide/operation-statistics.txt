@@ -1,0 +1,39 @@
+.. _用户指南-统计:
+
+
+统计
+----------
+
+Varnish自带几个漂亮、实用的统计工具，这些工具通过实时聚合并分析共享内存日志数据，然后不断的产生和更新一个数据集，展示给用户。
+
+.. XXX:上面的描述有点拗口. benc
+
+varnishtop
+~~~~~~~~~~
+
+`varnishtop` 读取共享内存日志数据并展示给用户一个不断更新的列表，列出某个时间段内产生最多的日志记录。
+
+`varnishtop` 通过使用-I，-i，-X 和 -x 参数可以对展示的信息做适当的过滤。它也可以用来显示记录在日志中的请求的资源，客户端来源，客户端类型或其他信息的排序。
+
+``varnishtop -i rxurl`` 可以显示客户端请求了什么样的URL。 ``varnishtop -i txurl`` 可以显示哪些后端服务器被请求的次数最多。 ``varnishtop -i RxHeader -I Accept-Encoding`` 可以显示客户端请求头信息中“Accept-Encoding”的类型哪些是最常见的。
+
+更多的详细信息请参考:ref:`ref-varnishtop`。
+
+varnishhist
+~~~~~~~~~~~
+
+`varnishhist`工具读取`varnishd(1)` 共享内存日志并且持续的更新和以直方图的形式显示由Varnish线程处理的最后N个请求。 
+.. XXX:1? benc
+具体N的值和直方图的垂直刻度显示在左上角。水平刻度是一个对数。如果是命中了缓存我们用管道符（“|”）标识，没有命中则用使用#号标识。
+
+更多的详细信息请参考:ref:`ref-varnishhist`。
+
+
+varnishstat
+~~~~~~~~~~~
+
+Varnish有很多计数器。我们统计没有命中的次数，命中的次数，关于存储的信息，已经创建的线程，删除的对象等几乎所有的信息。 `varnishstat` 会转储这些信息. 当你想对Varnish进行调优的时候，这些信息很有用。
+
+有些程序可以通过定期的轮询`varnishstat` 收集统计信息，然后做出漂亮的图形展示给用户。其中有一个程序叫Munin。Munin 可以在http://munin-monitoring.org/这个网站下载。在Varnish源代码中也有为Munin提供的一个插件。
+
+更多的详细信息请参考:ref:`ref-varnishstat`。

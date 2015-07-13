@@ -1,0 +1,22 @@
+前提条件
+=============
+
+为了安装Varnish，你必须满足下面的要求：
+
+  *  一个较新的、最好是服务器级别的计算机。
+  *  比较现代的而且是64位的一个系统
+    - Linux
+    - FreeBSD,或者 
+    - Solaris (x86 only).
+  * Root访问权限.
+
+
+Varnish也可以被安装在其他UNIX系统上，但是相比较上面的系统，Varnish在这些系统上没有被广泛、系统地测试。
+Varnish有时可以运行在：
+
+  * 32位版的上述系统,
+  * OS X,
+  * NetBSD,
+  * OpenBSD, 和
+  * 带Cygwin的Windows。
+

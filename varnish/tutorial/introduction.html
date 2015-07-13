@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Varnish缓存代理服务基本介绍 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Varnish教程" href="index.html" />
+    <link rel="next" title="启动Varnish" href="starting_varnish.html" />
+    <link rel="prev" title="Varnish教程" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="启动Varnish"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Varnish教程"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="varnish">
+<span id="id1"></span><h1>Varnish缓存代理服务基本介绍<a class="headerlink" href="#varnish" title="Permalink to this headline">¶</a></h1>
+<p>Varnish是一款HTTP服务反向代理缓存软件.它接收来自客户端的请求
+并尽可能的从缓存中返回给客户端请求的内容. 如果Varnish不能从缓存中找到客户端请求的内容，它会将请求转发到后端服务器,然后获取后端服务器的返回内容并将内容存储在缓存中，最后将内容发送给客户端。</p>
+<p>当客户端的请求已经被缓存的时候，通常Varnish返回请求内容的时间是毫秒级的，这和通过后端服务器返回客户端请求内容花费的时间是两个数量级的, 所以，你肯定是希望大多数的客户端请求都可以直接从Varnish的缓存中返回给客户端.</p>
+<p>Varnish决定是否缓存请求内容是基于后端服务器的响应内容的. 后端服务器可以通过设置HTTP响应头`Cache-Control`这个参数来指示Varnish缓存请求内容. 在有一些情况下Varnish是不会缓存请求内容的,其中最常见的一种就是请求内容中使用了cookie. 因为cookie是一种标识特定的客户端的web对象, Varnish默认不缓存带有cookie的请求内容.</p>
+<p>Varnish的这种行为和它大多数的功能一样都是可以通过Varnish配置语言（VCL）写入不同的策略来改变的。 可以参考:ref:<cite>users-guide-index</cite> 来详细的学习如何做到这点。</p>
+<div class="section" id="id2">
+<h2>性能<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Varnish具有优越的结构设计和高性能的设计宗旨. 它通常只受限于网络传输速度, 高效率使得它的性能不再是问题.你应该专注于让你的web程序更好的工作，让自己在一定程度上不用关心Varnish性能和扩展性。</p>
+</div>
+<div class="section" id="id3">
+<h2>灵活性<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>除了性能之外,另外一种Varnish的核心功能就是灵活的配置语言VCL. VCL可以让你编写不同的策略来定义怎样处理不同的客户端请求.</p>
+<p>通过这样的策略你可以定义哪些内容可以被缓存, 从哪个源站获取内容，哪些客户端请求和后端服务返回内容应该被改写。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h1>支持的操作系统平台<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<p>Varnish被设计是运行在高版本的linux和FreeBSD平台的.它最理想的使用体验也是基于这些平台的 在这里要感谢我们的贡献者。
+当然它也可以运行在 NetBSD, OpenBSD, OS X 和各种Solaris衍生的操作系统平台列如： Oracle Solaris, OmniOS 和 SmartOS.</p>
+</div>
+<div class="section" id="id5">
+<h1>关于Varnish的开发过程<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<p>Varnish是一个社区驱动项目. 它的发展目前是由Poul-Henning Kamp
+(架构师), Rogier Mulhuijzen (Fastly) 和 Lasse Karstensen (Varnish软件工程师)组成的理事会监督的
+如果你想为Varnish的发展做出贡献，请先参阅：<a class="reference external" href="https://www.varnish-cache.org/trac/wiki/Contributing">https://www.varnish-cache.org/trac/wiki/Contributing</a></p>
+</div>
+<div class="section" id="id6">
+<h1>联系方式<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h1>
+<p>你可以通过多种渠道联系我们. 对于实时聊天你可以通过域名irc.linpro.net访问我们的IRC的#varnish
+和 #varnish-hacking 频道.
+我们有两个邮件列表可以使用.一个是用来做用户提问和开发讨论的.参见 <a class="reference external" href="https://www.varnish-cache.org/lists">https://www.varnish-cache.org/lists</a>
+在这个网站中还有一个论坛用来提供信息和用户注册的.</p>
+<p>现在你对Varnish是什么应该有了一个大概的认识,让我们看看能否启动并运行它吧.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Varnish缓存代理服务基本介绍</a><ul>
+<li><a class="reference internal" href="#id2">性能</a></li>
+<li><a class="reference internal" href="#id3">灵活性</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">支持的操作系统平台</a></li>
+<li><a class="reference internal" href="#id5">关于Varnish的开发过程</a></li>
+<li><a class="reference internal" href="#id6">联系方式</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Varnish教程</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="starting_varnish.html"
+                        title="next chapter">启动Varnish</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/introduction.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="启动Varnish"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Varnish教程"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Varnish教程</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

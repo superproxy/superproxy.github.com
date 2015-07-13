@@ -1,0 +1,41 @@
+.. _启动Varnish教程:
+
+
+启动Varnish
+----------------
+
+本教程是以假定Varnish运行在Ubuntu, Debian,Red Hat Enterprise Linux 或者 CentOS操作系统平台为前提的. 如果你想运行在其他操作系统平台上，你可能需要做一些内核转换测试. 因为你运行在一个“怪异”的操作系统平台上，你要适应它. :-)
+
+确保你已经成功的安装了Varnish(按照上面 "Installing Varnish"中提到的步骤）.
+
+当你已经正确的安装了Varnish 你可以通过``service varnish start``启动Varnish. 
+
+.. XXX:如果Varnish当前已经在运行了会发生什么呢? benc
+
+现在Varnish已经运行了. 让我们来确认一下它能正常工作. 使用你的浏览器访问 http://127.0.0.1:6081/ (把IP地址替换成运行Varnish的机器的IP地址) Varnish默认的配置会试着把请求转发到本机的web程序. Varnish默认会认为web程序会监听HTTP的8080端口.
+
+如果本机没有运行web程序，Varnish会抛出一个错误. 对于到底抛出什么文字来描述错误，Varnish是比较保守的，所以每当有什么不妥的时候，Varnish都会抛出同一个通用的描述："Error 503 Service Unavailable".
+
+也许你已经有一个web程序运行在其他机器的其它端口上. 让我们编辑配置文件使Varnish指向实际运行web程序的机器和端口.
+
+打开你最喜欢的编辑器并编辑`/etc/varnish/default.vcl`这个文件. 这个文件中大多数内容是被注释掉了的，但是有一部分是没有注释掉的. 像这一段::
+
+  vcl 4.0;
+  
+  backend default {
+      .host = "127.0.0.1";
+      .port = "8080";
+  }
+
+我们将更改这段配置让它指向实际运行的web程序的机器. 希望
+http://www.varnish-cache.org/ 是正常运行的. 我们就用它了. 用下面这段配置替换原来的配置::
+
+  vcl 4.0;
+  
+  backend default {
+      .host = "www.varnish-cache.org";
+      .port = "80";
+  }
+
+
+现在运行 ``service varnish reload`` 命令让Varnish重新加载配置文件. 如果你在你的浏览器中能够成功访问http://127.0.0.1:6081/ 你应该可以看到一些目录列表. 这说明Varnish可以正常工作了! 但是因为你的客户端（你的浏览器）在请求中没有发送合适的主机头，所以你没有办法看到Varnish的官方网站“http://www.varnish-cache.org/”通常只能看到默认的网络文件目录列表.

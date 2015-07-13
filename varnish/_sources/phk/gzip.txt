@@ -1,0 +1,122 @@
+.. _phk_gzip:
+
+=======================================
+如何使用GZIP, 在Varnish中GZIP+ESI如何运行
+=======================================
+
+首先，这里读到的所有有关GZIP，都是受以下参数控制:
+
+	http_gzip_support
+
+默认处于"on"状态，如果不想让Varnish尝试智能压缩，那么就用"off"来关闭。
+
+http_gzip_support是用来做什么的
+------------------------------
+
+从vcl_recv{}过来的请求被发送到'pipe' 或 'pass'模块，没有什么不同的，这个过程只影响缓存中hit/miss请求。
+
+请送给"pipe" 或 "pass"的请求里面，除非包含可以接受gzip的内容：
+
+	是否含有Accept-Encoding的头
+	是否有q=#数，这是否大于0
+
+可以做gzip的客户端，会在他们的头里面重写：
+
+	Accept-Encoding: gzip
+
+那些不支持gzip的客户端就会在http中去掉Accept-Encoding头，通过在响应中创建了Vary，这样就确保了缓存对象创建过程中的返回字符串的一致性。
+
+在lookup操作中，我们忽略所有Vary: strings中的"Accept-encoding"，以避免产生gzip和gunzip的对象版本，varnish能够根据需求做gunzip操作。（我们在lookup时，实施这个小魔法，这样对象在当前存储介质中存储是，就能被用来启用或不启用gzip支持。）
+
+Varnish除了gzip类型外，其他类型不做压缩，特别是浏览器有bug的情况下，我们不会做deflate。
+
+在vcl_miss{}调用前，后端请求 Accept-Encoding总会设置成：
+
+	Accept-Encoding: gzip
+
+即使客户端不支持这样做
+
+也是为了引导后端发送给varnish gzip的内容。
+
+Varnish不会gzip varnish自己的任何内容（见下面），我们相信后端能够知道什么内容可能回gzip(html)，什么样的不能gzip(jpeg)。
+
+如果在vcl_fetch{}函数中，我们发现我们尝试发送一个gzip的对象给客户端，但是客户端并没有表明接收gzip的源，我们就会在发送的过程中unzip这个对象。
+
+优化调整
+-----------------------------
+
+在vcl_recv{}中，有机会在发生任何事情前对client的Accept-Encoding:头做修改处理。
+
+在vcl_pass{}中，客户端的Accept-Encoding，在不修改请求的情况下复制给后端的backend。
+即使客户端不支持gzip，你也可以强制A-C头支持"gzip"，来节省backend与varnish之间的带宽，varnish在发送给客户端前，不会gunzip对象。
+
+在vcl_miss{}中，可以移除"Accept-Encoding: gzip"头，如果不想后端gzip对象。
+
+在vcl_fetch{}中，有两个新变量允许在获取对象过程中修改gzip属性：
+
+	set beresp.do_gunzip = true;
+
+会让Varnish在从后端取对象的时候，把已经gzip过的对象，做gunzip处理。（我不知道什么时候/为什么要这么做……）
+
+	set beresp.do_gzip = true;
+
+会让varnish在从后端去对象时做gzip压缩，后端提供给varnish不发送gzip对象时。
+
+请记住，大部分类型的内容是不能被gzip的，值得注意的是，不能被压缩的格式像jpeg、png等类似的，一个典型示例如下::
+
+	sub vcl_fetch {
+		if (req.url ~ "html$") {
+			set beresp.do_gzip = true;
+		}
+	}
+
+GZIP and ESI
+------------
+
+首先，请记住激活ESI的新语法::
+
+	sub vcl_fetch {
+		set beresp.do_esi = true;
+	}
+
+理论上，希望在实践中，当启动ESI时，上面中你看到的也能应用，如果这是一个bug，请及时报告。
+
+但是现在事情更复杂了。现在正在发生什么？当后端发送gzip对象，我们ESI处理它，它包含了另一个不gzip的对象，我们想发送gzip后的结果给客户端？
+
+到这里，事情就会变得有点毛刺，所以在这段里面让我解释下原因。
+
+假设我们在ESI处理过程中有一个ungzip的对象。
+
+ESI解析器通过寻找各种字符串运作对象，然后为Varnish ESI代码生成一种称为"VEC"的字节流。
+
+VEC包含类似"skip 234 bytes", "deliver 12919 bytes","include /foobar", "deliver 122 bytes"等介绍说明，并在存储在对象中。
+
+当我们返回一个对象时，VEC会中断VEC字符串，尤其是esi返回的代码，然后将输出按序发给客户端。
+
+当VEC说"include /foobar"，我们做的最多的就是重启新的URL，可能还有Host:头，并调用call vcl_recv{}等。
+通过检验VCL中的'req.esi_level'变量，可以使用ESI包含。
+
+通过ESI解析过的对象以gzip的方式存储起来，压缩条件与上面的一样：如果后端发送gzip的，VCL不会询问是否做do_gunzip，如果后端发送ungzip的，VCL就会问是否做do_gzip。
+
+请注意，因为我们需要在gzip文件中插入flush和复位points，所以实际上会比相同的gzip对象稍大些。
+
+当我们遇到本不应该被压缩反而被gzip的对象时，我们回gunzip它们，但是当我们遇到本应该gzip，但是没有呗压缩的对象时，我们回gzip它们，但是仅在一级别做压缩。
+
+所以为了不必要的工作，也为了最高效的压缩效率::
+
+	sub vcl_miss {
+		if (object needs ESI processing) {
+			unset bereq.http.accept-encoding;
+		}
+	}
+
+	sub vcl_fetch {
+		if (object needs ESI processing) {
+			set beresp.do_esi = true;
+			set beresp.do_gzip = true;
+		}
+	}
+
+这样后端backend发送这些未压缩的对象给varnish。
+
+同时，你也要确认哪些是esi:included可以做压缩的，哪些是后端backend可以做的，哪些是Varnish可以做的。

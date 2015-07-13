@@ -1,0 +1,70 @@
+
+Varnish 管理员文档
+==================
+
+VarnishCache是一款web应用加速器软件，其作为反向代理缓存而被人所熟悉。Varnish应该可以安装任何Server前端，通过对HTTP协议的说明和和对其配置来缓存内容。VarnishCache非常非常快速，通常它可以加速一个元素到300-1000倍，而这取决于你目前的架构。
+
+使用Varnish前我们建议你先读一读Varnish文档教程 :ref:`install-index` .一旦你运行了Varnish，我们提醒你看看我们的教程- :ref:`tutorial-index`,最后是 :ref:`users-guide-index`.
+
+如果想要了解如何使用Varnish特定工具, :ref:`reference-index` 包含了关于这些工具的详细文档。对比Varnish上一版版本的更改点见 :ref:`whats-new-index` 章节. 后，我们有关于Varnish和HTTP的相关内容，请见 :ref:`phk` 博客。
+
+
+手册中使用的 格式 约定包括：
+
+  ``service varnish restart``
+    可以运行的命令或可使用的快捷键。或者使用终端或者在命令执行后
+
+  `/usr/local/`, `varnishadm`, `sess_timeout`
+    Varnish可以配置的路径和参数
+
+  http://www.varnish-cache.org/
+    超连接
+
+较长的命令列表示例和VCL格式如下：::
+
+    $ /opt/varnish/sbin/varnishd -V
+    varnishd (varnish-4.0.0-tp1 revision ddd00e1)
+    Copyright (c) 2006 Verdens Gang AS
+    Copyright (c) 2006-2011 Varnish Software AS
+
+
+.. For maintainers:
+.. * always write Varnish with a capital V: Varnish, Varnish Cache.
+.. * Write Varnish tools as their executable name: `varnishd`, `varnishadm`.
+.. * if part of a command actually runable by the reader, use double backticks:
+..   ``varnishd -f foo.c``
+.. * wrap lines at 80 characters, ident with 4 spaces. No tabs, please.
+.. We use the following header indicators
+.. For titles:
+
+.. H1
+.. %%%%%
+
+.. Title
+.. %%%%%
+
+.. H2 - H5
+.. ======================
+.. ----------------------
+.. ~~~~~~~~~~~~~~~~~~~~~~
+.. ......................
+
+
+.. toctree::
+    :maxdepth: 1
+
+    installation/index.txt
+    tutorial/index.txt
+    users-guide/index.txt
+    reference/index.txt
+    whats-new/index.txt
+    phk/index.txt
+    glossary/index.txt
+
+
+
+索引和列表
+------------------
+
+* :ref:`genindex`
+* :ref:`search`

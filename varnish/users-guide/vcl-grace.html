@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Misbehaving servers &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="VCL - Varnish Configuration Language" href="vcl.html" />
+    <link rel="next" title="Using In-line C to extend Varnish" href="vcl-inline-c.html" />
+    <link rel="prev" title="Hashing" href="vcl-hashing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-inline-c.html" title="Using In-line C to extend Varnish"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-hashing.html" title="Hashing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="vcl.html" accesskey="U">VCL - Varnish Configuration Language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="misbehaving-servers">
+<span id="users-guide-handling-misbehaving-servers"></span><h1>Misbehaving servers<a class="headerlink" href="#misbehaving-servers" title="Permalink to this headline">¶</a></h1>
+<p>A key feature of Varnish is its ability to shield you from misbehaving
+web- and application servers.</p>
+<div class="section" id="grace-mode">
+<h2>Grace mode<a class="headerlink" href="#grace-mode" title="Permalink to this headline">¶</a></h2>
+<p>When several clients are requesting the same page Varnish will send
+one request to the backend and place the others on hold while fetching
+one copy from the backend. In some products this is called request
+coalescing and Varnish does this automatically.</p>
+<p>If you are serving thousands of hits per second the queue of waiting
+requests can get huge. There are two potential problems - one is a
+thundering herd problem - suddenly releasing a thousand threads to
+serve content might send the load sky high. Secondly - nobody likes to
+wait. To deal with this we can instruct Varnish to keep
+the objects in cache beyond their TTL and to serve the waiting
+requests somewhat stale content.</p>
+<p>So, in order to serve stale content we must first have some content to
+serve. So to make Varnish keep all objects for 2 minutes beyond their
+TTL use the following VCL:</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_backend_response {
+  set beresp.grace = 2m;
+}
+</pre></div>
+</div>
+<p>Now Varnish will be allowed to serve objects that are up to two
+minutes out of date. When it does it will also schedule a refresh of
+the object. This will happen asynchronously and the moment the new
+object is in it will replace the one we&#8217;ve already got.</p>
+<p>You can influence how this logic works by adding code in vcl_hit. The
+default looks like this::</p>
+<div class="highlight-python"><div class="highlight"><pre>sub vcl_hit {
+   if (obj.ttl &gt;= 0s) {
+       // A pure unadultered hit, deliver it
+       return (deliver);
+   }
+   if (obj.ttl + obj.grace &gt; 0s) {
+       // Object is in grace, deliver it
+       // Automatically triggers a background fetch
+       return (deliver);
+   }
+   // fetch &amp; deliver once we get the result
+   return (fetch);
+}
+</pre></div>
+</div>
+<p>The grace logic is pretty obvious here. If you have enabled
+<a class="reference internal" href="vcl-backends.html#users-guide-advanced-backend-servers-health"><em>Health checks</em></a> you can check if
+the backend is sick and only serve graced object then. Replace the
+second if-clause with something like this::</p>
+<div class="highlight-python"><div class="highlight"><pre>if (!std.healthy(req.backend_hint) &amp;&amp; (obj.ttl + obj.grace &gt; 0s)) {
+      return (deliver);
+} else {
+      return (fetch);
+}
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>So, to sum up, grace mode solves two problems:</dt>
+<dd><ul class="first last simple">
+<li>it serves stale content to avoid request pile-up.</li>
+<li>it serves stale content if you allow it.</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Misbehaving servers</a><ul>
+<li><a class="reference internal" href="#grace-mode">Grace mode</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vcl-hashing.html"
+                        title="previous chapter">Hashing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vcl-inline-c.html"
+                        title="next chapter">Using In-line C to extend Varnish</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/users-guide/vcl-grace.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-inline-c.html" title="Using In-line C to extend Varnish"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-hashing.html" title="Hashing"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="vcl.html" >VCL - Varnish Configuration Language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

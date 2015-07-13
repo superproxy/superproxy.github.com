@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>命令行接口（CLI） - 控制Varnish的一切 &mdash; varnish 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="varnish 1.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Starting and running Varnish" href="running.html" />
+    <link rel="next" title="Storage backends" href="storage-backends.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="command-line.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="storage-backends.html" title="Storage backends"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="command-line.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" accesskey="U">Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cli-varnish">
+<span id="id1"></span><h1>命令行接口（CLI） - 控制Varnish的一切<a class="headerlink" href="#cli-varnish" title="Permalink to this headline">¶</a></h1>
+<p>一旦`varnishd`启动了，你可以通过命令行接口控制它。</p>
+<p>想要运行命令行接口，最简单的办法是在运行`varnishd`的机器上运行`varnishadm`:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnishadm help
+</pre></div>
+</div>
+<p>如果你想在远程操作系统上运行`varnishadm`，有两种方法可以做到。</p>
+<p>你可以远程登录（SSH）到运行`varnishd`的机器然后运行`varnishadm`:</p>
+<div class="highlight-python"><div class="highlight"><pre>ssh $http_front_end varnishadm help
+</pre></div>
+</div>
+<p>你也可以设置让`varnishd`接受远程的CLI连接(使用‘-T’和‘-S’参数):</p>
+<div class="highlight-python"><div class="highlight"><pre>varnishd -T :6082 -S /etc/varnish_secret
+</pre></div>
+</div>
+<p>然后在远程操作系统上运行`varnishadm`:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnishadm -T $http_front_end -S /etc/copy_of_varnish_secret help
+</pre></div>
+</div>
+<p>但是如你所见，远程登录（SSH）还是更方便一点。</p>
+<p>如果你不带参数执行`varnishadm`，它会从`stdin`（标准输入）中读取CLI命令，如果你带了参数，它会将这些作为单一的CLI命令来执行。</p>
+<p>在CLI中执行命令每次都会返回一个状态码，告诉我们它执行的状态: 如果返回的是‘200’，意思是执行成功了，如果返回的是其它的状态，说明是有问题了。</p>
+<p>如果返回的状态码不是200，<a href="#id2"><span class="problematic" id="id3">`</span></a>varnishadm`会返回状态1并退出，同时通过标准错误输出打印出状态码。</p>
+<div class="section" id="cli">
+<h2>在命令行接口(CLI)中能做什么<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
+<p>CLI给了你对`varnishd`几乎完全的控制权，以下是你可以执行的一些重要的任务:</p>
+<ul class="simple">
+<li>加载/使用/剔除VCL程序</li>
+<li>取消(删除)缓存内容</li>
+<li>更改参数值</li>
+<li>启动/关闭工作进程</li>
+</ul>
+<p>现在我们来讨论以上的简述。</p>
+<div class="section" id="vcl">
+<h3>加载/使用/剔除VCL程序<a class="headerlink" href="#vcl" title="Permalink to this headline">¶</a></h3>
+<p>所有的缓存策略都是通过VCL程序配置的。</p>
+<p>你可以加载多个VCL程序，但是同一时间只能有一个是被指定为 &#8220;active&#8221;的。所有新的请求都从这里开始。</p>
+<p>加载新的VCL程序:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnish&gt; vcl.load some_name some_filename
+</pre></div>
+</div>
+<p>加载过程中，Varnish会从VCL文件中读取内容并编译。如果编译失败，你会得到像下面这样的错误信息:</p>
+<div class="highlight-python"><div class="highlight"><pre>.../mask is not numeric.
+(&#39;input&#39; Line 4 Pos 17)
+                &quot;192.168.2.0/24x&quot;,
+----------------#################-
+
+Running VCC-compiler failed, exit 1
+VCL compilation failed
+</pre></div>
+</div>
+<p>如果编译成功，VCL程序就被加载了。然后你随时可以通过下面的命令把这个VCL程序指定为&#8221;active&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnish&gt; vcl.use some_name
+</pre></div>
+</div>
+<p>如果你发现新的VCL程序有些问题，你可以再换回以前的VCL程序:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnish&gt; vcl.use old_name
+</pre></div>
+</div>
+<p>切换过程是瞬间完成的，完成之后所有的新的请求都会使用当前的这个新的VCL程序。正在处理的请求还是会使用原来老的VCL程序。</p>
+<p>这里有个好想法是事先设计好一个紧急的VCL程序，并且始终保持它是被加载的状态。这样在你需要的时候，你只需要通过一个命令vcl.use就可以切换到这个VCL程序来。</p>
+</div>
+<div class="section" id="ban">
+<h3>Ban缓存内容<a class="headerlink" href="#ban" title="Permalink to this headline">¶</a></h3>
+<p>Varnish提供 &#8220;purges&#8221;来清除缓存内容，只要你能指定具体的对象。</p>
+<p>但是有时候，不指定一个具体的对象列表也能清除缓存是非常有用的。</p>
+<p>想象一下，例如，一个公司的logo变了，现在你想让Varnish停止使用缓存中旧的logo，你应该这样做:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnish&gt; ban req.url ~ &quot;logo.*[.]png&quot;
+</pre></div>
+</div>
+<p>没错，这就是正则表达式。</p>
+<p>我们把这种方式叫&#8221;banning&#8221;因为被取消的对象还存在缓存中，只是被禁止返回给客户端。</p>
+<p>只有在HTTP请求这个对象的时候Varnish会把这个对象和正则表达式做匹配，而不是立即匹配缓存中的所有对象。</p>
+<p>banning要比重启Varnish以去掉无用的内容要实惠的多。</p>
+</div>
+<div class="section" id="id4">
+<h3>更改参数值<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>参数可以用“-p”的选项在Varnish启动的时候进行设置，但也可以通过CLI对运行中的Varnish的参数进行设置:</p>
+<div class="highlight-python"><div class="highlight"><pre>varnish&gt; param.show prefer_ipv6
+200
+prefer_ipv6         off [bool]
+                    Default is off
+                    Prefer IPv6 address when connecting to backends
+                    which have both IPv4 and IPv6 addresses.
+
+varnish&gt; param.set prefer_ipv6 true
+200
+</pre></div>
+</div>
+<p>一般来说是不建议修改参数，除非你有一个充分的理由。比如性能优化和安全配置。</p>
+<p>大多数参数修改后会立即生效或者因为一些持续性的操作而自然延迟,</p>
+<p>但是有些参数修改后需要重启子进程才会生效，这些在参数的描述中，都会有说明。</p>
+</div>
+<div class="section" id="id5">
+<h3>启动和停止工作进程<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>一般来说，你应该保持工作进程一直是运行状态，但是如果你一定要启动或者停止它，以下非常简单明了的命令可以做到:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">varnish</span><span class="o">&gt;</span> <span class="n">stop</span>
+</pre></div>
+</div>
+<p>and:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">varnish</span><span class="o">&gt;</span> <span class="n">start</span>
+</pre></div>
+</div>
+<p>如果你启动`varnishd`的时候加了‘-d’ (debugging)选项，你需要显式地去启动子进程。</p>
+<p>如果子进程挂了，主进程会自动重新启动它，但你可以通过关闭“auto_restart&#8217;参数来禁用这个功能。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">命令行接口（CLI） - 控制Varnish的一切</a><ul>
+<li><a class="reference internal" href="#cli">在命令行接口(CLI)中能做什么</a><ul>
+<li><a class="reference internal" href="#vcl">加载/使用/剔除VCL程序</a></li>
+<li><a class="reference internal" href="#ban">Ban缓存内容</a></li>
+<li><a class="reference internal" href="#id4">更改参数值</a></li>
+<li><a class="reference internal" href="#id5">启动和停止工作进程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="command-line.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="storage-backends.html"
+                        title="next chapter">Storage backends</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/users-guide/run_cli.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="storage-backends.html" title="Storage backends"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="command-line.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li><a href="../index.html">varnish 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >The Varnish Users Guide</a> &raquo;</li>
+          <li><a href="running.html" >Starting and running Varnish</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, sens.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

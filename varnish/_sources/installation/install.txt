@@ -1,0 +1,125 @@
+.. _install-doc:
+
+安装Varnish
+==================
+
+.. no section heading here.
+
+因为varnish是开源软件，你可以选择通过二进制包安装或者自己编译源代码安装。通过包安装或者编译源代码纯粹是个人喜好。
+如果你不知道如何选择哪种安装方式，我们建议你通读本节，然后选择适合你的安装方式。
+
+源代码 或 安装包?
+-------------------
+
+在绝大数操作系统上，通常可以通过对应的系统管理包安装。 典型示例 
+
+FreeBSD
+-------
+
+二进制包:
+		``pkg_add -r varnish``
+从源代码:
+		``cd /usr/ports/varnish && make install clean``
+
+Red Hat / CentOS
+----------------
+
+我们尽可能地保证最新版本的预编译RPM包(el5和el6)在`repo.varnish-cache.org <http://repo.varnish-cache.org/>`_.上可用。 
+查看在线的`红帽子安装指导<http://www.varnish-cache.org/installation/redhat>`_获得更多信息 .
+
+Varnish已存在`EPEL<http://fedoraproject.org/wiki/EPEL>`_ 库中,
+但是由于新版本的Varnish有不兼容语法规则，库中只有老版本的Varnish可用。
+
+基于上述原因，我们推荐你直接通过我们的库安装最新版本。
+
+Debian/Ubuntu
+-------------
+
+Varnish随Debian和Ubuntu发行。通过执行``sudo apt-get install
+varnish``，就可以获得Varnish。
+请注意那可能不是最新的版本。 如果你需要一个较新的版本，可以查看在线的安装指导`Debian
+<http://www.varnish-cache.org/installation/debian>`_ 或者 `Ubuntu
+<http://www.varnish-cache.org/installation/ubuntu>`_.
+
+
+从源代码中编译Varnish
+=============================
+
+如果没有二进制包适合你的系统，或者你有其他原因想编译Varnish，参考下面的步骤：
+
+下载适合的Varnish的tarball，你可以在这里下载
+http://repo.varnish-cache.org/source/ 。
+
+或者，如果你想研究Varnish，你可以通过下面命令克隆我们的git库：
+
+      ``git clone git://git.varnish-cache.org/varnish-cache``
+
+
+在Debain / Ubuntu上构建依赖包
+--------------------------------------
+
+为了从源代码上构建Varnish，你需要安装一些包。在Deian或者Ubuntu上，需要安装下面的包：
+
+* `autoconf`
+* `automake1.1`
+* `autotools-dev`
+* `groff-base`
+* `make`
+* `libedit-dev`
+* `libncurses-dev`
+* `libpcre3-dev`
+* `libtool`
+* `pkg-config`
+* `python-docutils`
+
+如果你需要从git上构建，你也需要下面的包：
+
+* `python-sphinx` (可选, 如果你需要构建文档)
+
+Build dependencies on Red Hat / CentOS
+在Red Hat / CentOS上构建依赖包
+--------------------------------------
+
+在Red Hat或者CentOS上构建Varnish，你需要下面安装下面的包：
+
+* `automake`
+* `autoconf`
+* `groff`
+* `libedit-devel`
+* `libtool`
+* `ncurses-devel`
+* `pcre-devel`
+* `pkgconfig`
+* `python-docutils`
+
+如果你需要从git上构建，你也需要下面的包：
+
+* `python-sphinx` (可选, 如果你需要构建文档)
+
+编译Varnish
+-----------------
+
+配置依赖需要上面合适包,请在确认一下::
+
+	cd varnish-cache
+	sh autogen.sh
+	sh configure
+	make
+
+`configure`脚本需要一些参数，不像其他参数从现在你可以忘记了，基本Varnish所有的东西都可以通过运行参数进行调整。  
+
+在你安装之前，你可能行执行测试套件。运行的时候，泡杯茶吧，测试需要好几分钟::
+
+	make check
+
+别担心一个或者两个测试失败，一些测试对时间太敏感（请告诉我们那些，我们好修复）,但是如果很多失败，特别`b00000.vtc`测试失败，问题相当严重。在没搞清楚之前，不要乱动。
+
+安装
+----------
+
+最后执行: ``sudo make install``
+
+现在Varnish安装在`/usr/local`、 `varnishd`程序安装在`/usr/local/sbin/varnishd`、默认的配置文件安装在 `/usr/local/etc/varnish/default.vcl`。
+
+在正确安装之后，你可以继续阅读:ref:`tutorial-index`.
+
