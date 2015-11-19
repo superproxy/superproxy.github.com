@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kyll 分享</title>
+  <title>SharpCoder 分享</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Kyll blog">
+  <meta name="description" content="SharpCoder blog">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Kyll 分享">
+<meta property="og:title" content="SharpCoder 分享">
 <meta property="og:url" content="http://superproxy.github.io/page/5/index.html">
-<meta property="og:site_name" content="Kyll 分享">
-<meta property="og:description" content="Kyll blog">
+<meta property="og:site_name" content="SharpCoder 分享">
+<meta property="og:description" content="SharpCoder blog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kyll 分享">
-<meta name="twitter:description" content="Kyll blog">
+<meta name="twitter:title" content="SharpCoder 分享">
+<meta name="twitter:description" content="SharpCoder blog">
   
   
     <link rel="icon" href="favicon.png">
@@ -47,7 +47,7 @@ var _hmt = _hmt || [];
     <header id="header">
   <div id="header-main" class="header-inner">
     <div class="outer">
-      <a href="/." id="logo"><i class="logo"></i><span class="site-title">Kyll 分享</span></a>
+      <a href="/." id="logo"><i class="logo"></i><span class="site-title">SharpCoder 分享</span></a>
       <nav id="main-nav">
         
           <a class="main-nav-link" href="/.">Home</a>
@@ -101,7 +101,7 @@ var _hmt = _hmt || [];
   <div class="inner profile-inner">
   	<div class="base-info profile-block">
 		  <img id="avatar" src="/css/images/avatar.png">
-      <h2 id="name">Kyll</h2>
+      <h2 id="name">SharpCoder</h2>
       <h3 id="title">X Architect</h3>
       <span id="location"><i class="fa fa-map-marker"></i>南京, China</span>
       <a id="follow" href="https://github.com/superproxy">关注我</a>
@@ -142,7 +142,7 @@ var _hmt = _hmt || [];
 </aside>
       
       <section id="main">
-      <article id="post-git是你想要的吗？" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-lvs实践" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -151,15 +151,15 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2010/09/03/git是你想要的吗？/">git是你想要的吗?</a>
+      <a class="article-title" href="/2014/08/15/lvs实践/">lvs实践</a>
     </h1>
   
 
         <div class="article-meta">
           <div class="article-date">
   <i class="fa fa-calendar"></i>
-  <a href="/2010/09/03/git是你想要的吗？/">
-    <time datetime="2010-09-03T14:34:00.000Z" itemprop="datePublished">2010-09-03</time>
+  <a href="/2014/08/15/lvs实践/">
+    <time datetime="2014-08-15T04:38:42.000Z" itemprop="datePublished">2014-08-15</time>
   </a>
 </div>
           
@@ -168,137 +168,8 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="SVN的优缺点">SVN的优缺点</h2><h4 id="优点">优点</h4><ol>
-<li>支持历史追踪 </li>
-<li>很容易合并和修改</li>
-<li>比较适合个人的历史记录、同一模块提交不是很频繁的协作开发</li>
-</ol>
-<h4 id="缺点">缺点</h4><ol>
-<li>适合每个人有LocalSpace的情况。一个模块一个人很好开发。 但是一个模块多个人开发，每个人必须不断的合并才能跟踪，影响别人的开发进展。</li>
-</ol>
-<h3 id="解决方案">解决方案</h3><p>双SVN方式 第一checkout后，合入自己的SVN。 更新时，对比本机的副本。<br>同步。 提交时，选择某个历史的SVN版本，和主版本比较合入。 缺点：每次都要主动的更新主版本，两个版本直接的文件没有关联性，需要借助第三方的工具进行比较。</p>
-<h2 id="GIT的优缺点">GIT的优缺点</h2><h4 id="缺点-1">缺点</h4><p>GIT图像界面并不太好 Windows下经常有莫名奇妙的错误 </p>
-<p>自己一个git库</p>
-<p>mkdir  project</p>
-<p>cd project </p>
-<p>D:>mkdir project</p>
-<p>D:>cd project</p>
-<p>D:\project&gt;git init</p>
-<p>Initialized empty Git repository in D:/project/.git/</p>
-<p>D:\project&gt;echo “1+1=?” &gt;readme.txt</p>
-<p>D:\project&gt;git add readme.txt</p>
-<p>D:\project&gt;git commit  -m 添加readme.txt</p>
-<p>创建本地拷贝</p>
-<p>D:>md local</p>
-<p>D:>cd local</p>
-<p>D:\local&gt;git clone d:\project</p>
-<p>Initialized empty Git repository in D:/local/project/.git/</p>
-<p>添加提交删除都一样</p>
-<p>D:\local\project&gt;git add -A</p>
-<p>D:\local\project&gt;git commit -m 添加其它文件</p>
-<p>D:\local\project&gt;git commit -a  -m 修改文件</p>
-<p>查看日志</p>
-<p>D:\local\project&gt;git log </p>
-<p>下载一个版本库</p>
-<p>git clone <a href="https://github.com/KentBeck/junit.git" target="_blank" rel="external">https://github.com/KentBeck/junit.git</a></p>
-<p>更多内容</p>
-<p>参考：</p>
-<p><a href="http://wenku.baidu.com/view/78898a1fa76e58fafab00377.html" target="_blank" rel="external">http://wenku.baidu.com/view/78898a1fa76e58fafab00377.html</a></p>
-<p><a href="http://www.ibm.com/developerworks/cn/linux/l-git/" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/linux/l-git/</a> </p>
-<h5 id="持续集成_=====">持续集成 =====</h5><p>自动化构建</p>
-<p>1.提交修改  2. 提交完毕后的固定时间，进行集成。 3. 将集成结果进行发布</p>
-<p>支持这个过程的方法很多，基本的原理：hook , at, ant, email&amp;web public</p>
-<h3 id="CruiseControl">CruiseControl</h3><p><a href="http://cruisecontrol.sourceforge.net/" target="_blank" rel="external">http://cruisecontrol.sourceforge.net/</a> </p>
-<h4 id="jenkins">jenkins</h4>
-      
-    </div>
-    <footer class="article-footer">
-  <div class="jiathis_style_24x24">
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_renren"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2010/09/03/git是你想要的吗？/"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-
-
-
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/svn/">svn</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-    
-      <article id="post-专业利器" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2009/12/19/专业利器/">专业利器</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          <div class="article-date">
-  <i class="fa fa-calendar"></i>
-  <a href="/2009/12/19/专业利器/">
-    <time datetime="2009-12-18T17:51:00.000Z" itemprop="datePublished">2009-12-19</time>
-  </a>
-</div>
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="编辑器">编辑器</h3><p>现在最爱VIM</p>
-<ul>
-<li>UE（收费）</li>
-<li>RJTextEd (免费,推荐使用) </li>
-<li>pspad(打开文件有点慢，估计和RJ互相参考了，不知道谁抄谁的） </li>
-<li>editplus (缺点还是蛮多的，但是小巧精悍，以前的最爱，盗版自律抛弃了）</li>
-</ul>
-<h4 id="浏览器">浏览器</h4><p>myie(<a href="http://myie9.net/" target="_blank" rel="external">http://myie9.net/</a>)  （现在可供选择的很多，好用的不多） </p>
-<ul>
-<li>双核可以调整速度，但是myie不用调整速度就很快。</li>
-<li>myie非常稳定</li>
-<li>myie兼容性好（IE嘛）</li>
-</ul>
-<h4 id="文件管理器">文件管理器</h4><p>totalcommand</p>
-<ul>
-<li>(汉化版简直就是另一个产品，打死我也不用原版) </li>
-<li>查找功能、文件历史记录功能，其它基本不用</li>
-</ul>
-<h4 id="文件比较器">文件比较器</h4><p>beyondcompare （小巧精悍，好破解）<br>Araxis Merge （比较强悍，没怎么用过）</p>
-<h4 id="十六进制编辑器">十六进制编辑器</h4><p>winhex  </p>
-<h4 id="程序管理器">程序管理器</h4><p>我的工具箱（就是我的，呵呵）<br>myuninstall</p>
-<h4 id="图像截图">图像截图</h4><p>snagit（非常好用）<br>hypercapture(文字识别好)<br>faston Capture （个人免费）</p>
-<h4 id="图像浏览">图像浏览</h4><p>faston ImageViewer(个人免费)</p>
-<h4 id="远程桌面工具">远程桌面工具</h4><p>xmanager/vnc</p>
-<h4 id="版本控制">版本控制</h4><p>svn/git</p>
-<h4 id="群聊">群聊</h4><p>mIRC<br>qq群<br>微信群  2015add</p>
-<h4 id="抓包">抓包</h4><p>wireshark(开源)</p>
-<h4 id="网页分析">网页分析</h4><p>firebug<br>Fidller<br>HttpAnalyzer（商业）<br>IECookiesView(主要很多浏览器不自带)</p>
-<h4 id="设备模拟">设备模拟</h4><p>mimic(生活所迫)<br>Boson NetSim</p>
-<h4 id="FTP工具">FTP工具</h4><p>filezilla<br>Tftpd32(tftpd, dhcpd syslog)<br>3daemon（HP收购了，哎，就是这么残酷）</p>
-<h3 id="PE工具">PE工具</h3><p>debug.exe<br>peid<br>PE Explorer<br>ollydbg<br>softICE<br>trw <a href="http://blog.liutaotao.com" target="_blank" rel="external">http://blog.liutaotao.com</a><br>w32dasm/IDA</p>
-<h4 id="系统分析工具">系统分析工具</h4><p><a href="http://www.sysinternals.com" target="_blank" rel="external">http://www.sysinternals.com</a>             <a href="http://www.nirsoft.net/" target="_blank" rel="external">http://www.nirsoft.net/</a><br>procexp                            　　 CurrProcess<br>Procmon （all in one）                  OpenedFilesView, ProcessActivityView  （监控）<br>tcpview                           　　　CurrPorts（更强些）<br>—-                                     MyUninstaller</p>
-<h4 id="IDE">IDE</h4><p>IDEA    add 2013</p>
-<p>eclipse<br><em>eclipse++就是插件一大堆的eclipse，麻烦的是我得去找，好处是我有更多的选择权和扩展权。)
-</em>越来越鄙视vs.net,即便是 2010也不行，失望。</p>
-<h4 id="JAVA工具">JAVA工具</h4><p>VisualVm（性能分析）<br>jdgui（反编译）<br>proguard（混淆器）</p>
+        <p>源地址[<a href="http://superproxy.github.io/docs/lvs/index.html">http://superproxy.github.io/docs/lvs/index.html</a>]</p>
+<iframe src="/docs/lvs/index.html" frameborder="0" width="100%" scrolling="yes" height="1000px"></iframe>
 
       
     </div>
@@ -309,7 +180,7 @@ var _hmt = _hmt || [];
   <a class="jiathis_button_tqq"></a>
   <a class="jiathis_button_weixin"></a>
   <a class="jiathis_button_renren"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2009/12/19/专业利器/"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2014/08/15/lvs实践/"></a>
   <a class="jiathis_counter_style"></a>
 </div>
 <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
@@ -318,170 +189,7 @@ var _hmt = _hmt || [];
 
 
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tools/">tools</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-    
-      <article id="post-Web开发演化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2009/04/18/Web开发演化/">Web开发演化</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          <div class="article-date">
-  <i class="fa fa-calendar"></i>
-  <a href="/2009/04/18/Web开发演化/">
-    <time datetime="2009-04-18T06:22:00.000Z" itemprop="datePublished">2009-04-18</time>
-  </a>
-</div>
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Web开发演化">Web开发演化</h2><ol>
-<li>静态 http javascript css</li>
-<li>cgi模式</li>
-<li>面向过程</li>
-<li>面向对象经过了两个阶段（sevlet, jsp)</li>
-<li>事件驱动方式(asp.net服务器控件)</li>
-<li>分层（本质解耦）</li>
-<li>WebService (SOA)<br>8.各种开发框架 MVC、 MVP、ORM、AOP、IOC<br>MVC、MVP（都属于 视图、模型、控制解耦）<br>AOP、IOC</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-  <div class="jiathis_style_24x24">
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_renren"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2009/04/18/Web开发演化/"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-
-
-
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web开发演化/">Web开发演化</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-    
-      <article id="post-OllDbg学习路线" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2009/04/16/OllDbg学习路线/">OllyDbg学习路线</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          <div class="article-date">
-  <i class="fa fa-calendar"></i>
-  <a href="/2009/04/16/OllDbg学习路线/">
-    <time datetime="2009-04-16T05:26:00.000Z" itemprop="datePublished">2009-04-16</time>
-  </a>
-</div>
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li><p>了解软件（注册过程，是否有壳）</p>
-</li>
-<li><p>有壳脱壳</p>
-</li>
-<li><p>快速定位(串定位、API定位、消息定位、内存定位等。方法越多，技术越高）</p>
-</li>
-<li><p>分析流程</p>
-</li>
-<li><p>爆破、补丁(动态补丁、程序修补)、注册机.</p>
-</li>
-</ol>
-<h3 id="学习路线">学习路线</h3><h5 id="C语言">C语言</h5><p><a href="http://oss.org.cn/ossdocs/gnu/linux/gdb.html" target="_blank" rel="external">http://oss.org.cn/ossdocs/gnu/linux/gdb.html</a></p>
-<h5 id="Windows_程序设计（第5版）（上、下册）">Windows 程序设计（第5版）（上、下册）</h5><p><a href="http://www.kuqin.com/networkprog/20080512/8362.html" target="_blank" rel="external">http://www.kuqin.com/networkprog/20080512/8362.html</a></p>
-<p><a href="http://www.bccn.net/Article/kfyy/cjj/jszl/200412/429.html" target="_blank" rel="external">http://www.bccn.net/Article/kfyy/cjj/jszl/200412/429.html</a></p>
-<h5 id="组成原理&amp;微机原理">组成原理&amp;微机原理</h5><h5 id="汇编&amp;win32汇编">汇编&amp;win32汇编</h5><p><a href="http://baike.baidu.com/view/33704.htm" target="_blank" rel="external">http://baike.baidu.com/view/33704.htm</a></p>
-<p><a href="http://www.aogosoft.com/" target="_blank" rel="external">http://www.aogosoft.com/</a></p>
-<p><a href="http://baike.baidu.com/view/270236.htm" target="_blank" rel="external">http://baike.baidu.com/view/270236.htm</a></p>
-<h5 id="ollydbg软件分析_（windasm+softice)">ollydbg软件分析 （windasm+softice)</h5><h6 id="简介">简介</h6><p><a href="http://book.51cto.com/art/200806/77871.htm" target="_blank" rel="external">http://book.51cto.com/art/200806/77871.htm</a></p>
-<h6 id="OllyDbg入门系列">OllyDbg入门系列</h6><p><a href="http://bbs.pediy.com/showthread.php?t=21748" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=21748</a></p>
-<p><a href="http://bbs.pediy.com/showthread.php?s&amp;threadid=21284" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?s&amp;threadid=21284</a></p>
-<p><a href="http://security.ctocio.com.cn/hacker/466/9075966.shtml" target="_blank" rel="external">http://security.ctocio.com.cn/hacker/466/9075966.shtml</a></p>
-<h5 id="keymaker">keymaker</h5><p><a href="http://sec.chinabyte.com/298/8914298.shtml" target="_blank" rel="external">http://sec.chinabyte.com/298/8914298.shtml</a></p>
-<p>OllyDbg常用断点</p>
-<p><a href="http://safe.it168.com/ss/2007-06-07/20070607038001.shtml" target="_blank" rel="external">http://safe.it168.com/ss/2007-06-07/20070607038001.shtml</a></p>
-<p>OllyDbg文章合集（破解的基本都是它了）</p>
-<p><a href="http://www.pediy.com/" target="_blank" rel="external">http://www.pediy.com/</a></p>
-<p><a href="http://www.anqn.com/ollydbg/" target="_blank" rel="external">http://www.anqn.com/ollydbg/</a></p>
-<p>调试器</p>
-<p>windbg框架</p>
-<p><a href="http://blog.csdn.net/zhyhang/archive/2007/02/07/1504937.aspx" target="_blank" rel="external">http://blog.csdn.net/zhyhang/archive/2007/02/07/1504937.aspx</a></p>
-<p>断点</p>
-<p><a href="http://book.51cto.com/art/200806/77880.htm" target="_blank" rel="external">http://book.51cto.com/art/200806/77880.htm</a> </p>
-<p><a href="http://book.51cto.com/art/200806/77881.htm" target="_blank" rel="external">http://book.51cto.com/art/200806/77881.htm</a></p>
-<p>重要概念</p>
-<p>要搞清各API函数的定义（查看相关API手册）。<br><br>API函数基本采用的是__stdcall调用约定，即函数入口参数按从右到左的顺序入栈，并由被调用者清理栈中参数，返回值放在eax寄存器中。因此，对相关的API函数要分析其前的push指令，这些指令将参数放进堆栈以传送给API调用。整个跟踪过程中要关注堆栈数据变化。<br><br>C代码中的子程序采用的是C调用约定，函数入口参数按从右到左的顺序入栈，由调用者清理栈中的参数。</p>
-<p>有关调用约定、参数传递等知识，可以从本书第4章获得。阅读上面代码时，需理解的GetDlgItemTextA函数原型如下：</p>
-<p>UINT GetDlgItemText(<br>HWND hDlg,        // 对话框句柄<br>int nIDDlgItem,       // 控件标识（ID号）<br>LPTSTR lpString,      // 文本缓冲区指针<br>int nMaxCount        // 最大字符数<br>);<br>GetDlgItemText采用标准调用约定，参数按从右到左的顺序入栈。例如本例中的汇编代码：<br> 004011AE  push    51         　   ; int nMaxCount<br>004011B0  push    eax           ; LPTSTR lpString,<br>004011B1  push    6E          ; int nIDDlgItem<br>004011B3  push    esi          ; HWND hDlg<br>004011B4  call    GetDlgItemTextA<br>当GetWindowText函数执行后，将把取出的文本放到由lpString（LPTSTR是一个长的指针，指向由空字符终止的字符串）指定的位置。如想看到输入的字符串，跟踪的时候，在4011B0一行停住，在eax寄存器单击右键，执行菜单“Follow in Dump”命令查看数据窗口中的内容，当然此时数据窗口中没什么有价值的东西。继续按F8键单步执行完下面一句：</p>
-<p>004011B4   call edi            ; GetDlgItemTextA函数取姓名</p>
-<p>此时GetDlgItemTextA函数已将字符串取出，放到eax所指的地址里。数据窗口右边字符段显示出刚输入的字符“pediy”，如图2.17所示。</p>
-<p>（点击查看大图）图2.17  数据窗口查看字符</p>
-<p>断点</p>
-<p>更多阅读</p>
-<p><a href="http://book.51cto.com/art/200806/77976.htm" target="_blank" rel="external">http://book.51cto.com/art/200806/77976.htm</a></p>
-<p><a href="http://book.51cto.com/art/200801/63515.htm" target="_blank" rel="external">http://book.51cto.com/art/200801/63515.htm</a></p>
-<p><a href="http://book.51cto.com/" target="_blank" rel="external">http://book.51cto.com/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-  <div class="jiathis_style_24x24">
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_renren"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="http://superproxy.github.io/2009/04/16/OllDbg学习路线/"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-
-
-
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/debug/">debug</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ollydbg/">ollydbg</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lvs/">lvs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/proxy/">proxy</a></li></ul>
 
     </footer>
   </div>
@@ -491,7 +199,7 @@ var _hmt = _hmt || [];
 
     
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -640,7 +348,7 @@ var _hmt = _hmt || [];
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Kyll<br>
+      &copy; 2015 SharpCoder<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. My Theme based on <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>
